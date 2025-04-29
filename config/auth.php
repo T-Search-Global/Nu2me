@@ -35,6 +35,14 @@ return [
     |
     */
 
+
+    'passwords' => [
+        'users' => [
+            'expire' => 60, // minutes
+        ],
+    ],
+
+
     'guards' => [
         'web' => [
             'driver' => 'session',

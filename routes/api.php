@@ -28,6 +28,9 @@ Route::get('/listing-edit/{id}', [ListingController::class, 'edit']);
 Route::post('/listing-update/{id}', [ListingController::class, 'update']);
 Route::post('/listing-delete/{id}', [ListingController::class, 'destroy']);
 
+Route::post('/user/update',[AuthController::class, 'updateUser']);
+Route::get('/user/edit',[AuthController::class, 'editUser']);
+
 });
 
 // Auth
@@ -36,4 +39,6 @@ Route::post('/login', [AuthController::class, 'login']);
 Route::post('/forgot-password', [AuthController::class, 'sendOtpEmail']);
 Route::post('/forgot-password-otp', [AuthController::class, 'forgotPasswordOtp']);
 Route::post('/reset-password', [AuthController::class, 'updatePassword']);
+
+
 Route::middleware('auth:sanctum')->post('/logout', [AuthController::class, 'logout']);

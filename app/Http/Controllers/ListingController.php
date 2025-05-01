@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Services\Listing\ListingService;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Validator;
 
 class ListingController extends Controller
 {
@@ -16,7 +17,7 @@ class ListingController extends Controller
 
     public function store(Request $request)
     {
-        $validated = $request->validate([
+        $validator = Validator::make($request->all(), [
             'name' => 'required|string|max:255',
             'description' => 'required|string',
             'category' => 'required|string',
@@ -25,6 +26,10 @@ class ListingController extends Controller
             'feature_check' => 'nullable|boolean',
             'img.*' => 'image|mimes:jpeg,png,jpg,gif|max:8048',
         ]);
+
+        if ($validator->fails()) {
+            return response()->json(['errors' => $validator->errors()], 422);
+        }
 
         $listing = $this->listingService->store($request);
 
@@ -50,15 +55,18 @@ class ListingController extends Controller
 
     public function update(Request $request, $id)
     {
-        $validated = $request->validate([
+        $validator = Validator::make($request->all(), [
             'name' => 'required|string|max:255',
             'description' => 'required|string',
             'category' => 'required|string',
             'price' => 'required|numeric',
             'location' => 'required|string',
             'feature_check' => 'nullable|boolean',
-            'img.*' => 'image|mimes:jpeg,png,jpg,gif|max:2048',
+            'img.*' => 'image|mimes:jpeg,png,jpg,gif|max:8048',
         ]);
+        if ($validator->fails()) {
+            return response()->json(['errors' => $validator->errors()], 422);
+        }
 
         $listing = $this->listingService->update($request, $id);
 

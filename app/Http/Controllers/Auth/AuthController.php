@@ -27,6 +27,7 @@ class AuthController extends Controller
             'city' => 'required|string|max:255',
             'country' => 'required|string|max:255',
             'password' => 'required|string|min:6|confirmed',
+            'img' => 'image|mimes:jpeg,png,jpg,gif|max:8048',
         ]);
 
         if ($validator->fails()) {

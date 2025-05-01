@@ -50,8 +50,16 @@ class User extends Authenticatable
     ];
 
     public function sendPasswordResetNotification($token)
-{
-    $this->notify(new ResetPasswordNotification($token));
-}
+    {
+        $this->notify(new ResetPasswordNotification($token));
+    }
 
+
+
+    protected $appends = ['img_url']; 
+
+    public function getImgUrlAttribute()
+    {
+        return $this->img ? asset('storage/user/img/' . $this->img) : null;
+    }
 }

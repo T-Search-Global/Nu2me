@@ -2,14 +2,15 @@
 
 namespace App\Services;
 
-use App\Http\Resources\UserResource;
-use App\Jobs\SendEmailJob;
 use App\Models\User;
-use Illuminate\Support\Carbon;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Hash;
+use App\Jobs\SendEmailJob;
 use Illuminate\Support\Str;
+use App\Jobs\SendRegisterJob;
+use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\DB;
+use App\Http\Resources\UserResource;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
 
 class AuthService
 {
@@ -26,6 +27,8 @@ class AuthService
         ]);
 
         $token = $user->createToken('auth_token')->plainTextToken;
+
+        dispatch(new SendRegisterJob($user));
 
         return [
             'status' => true,

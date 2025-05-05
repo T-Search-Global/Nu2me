@@ -27,6 +27,8 @@ class User extends Authenticatable
         'city',
         'country',
         'password',
+        'facebook_id',
+        'google_id',
     ];
 
     /**
@@ -56,7 +58,7 @@ class User extends Authenticatable
 
 
 
-    protected $appends = ['img_url']; 
+    protected $appends = ['img_url'];
 
     public function getImgUrlAttribute()
     {

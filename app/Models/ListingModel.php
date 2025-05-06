@@ -13,6 +13,7 @@ class ListingModel extends Model
     protected $table = "listings";
     protected $fillable = [
         'name',
+        'user_id',
         'description',
         'category',
         'price',

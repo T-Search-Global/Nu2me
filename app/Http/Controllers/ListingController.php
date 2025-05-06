@@ -31,6 +31,7 @@ class ListingController extends Controller
             return response()->json(['errors' => $validator->errors()], 422);
         }
 
+
         $listing = $this->listingService->store($request);
 
         return response()->json([

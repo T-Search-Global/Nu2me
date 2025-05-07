@@ -19,9 +19,11 @@ class SocialiteController extends Controller
 {
     public function loginWithGoogle(Request $request)
     {
+
         $request->validate([
             'token' => 'required|string'
         ]);
+
 
         try {
             $googleUser = Socialite::driver('google')->stateless()->userFromToken($request->token);
@@ -36,19 +38,20 @@ class SocialiteController extends Controller
                     'img' => $googleUser->getAvatar(), // you can save this
                     'city' => null ?? "N/a",
                     'country' => null ?? "N/a",
-                ]
-            );
+                    ]
+                );
 
-            $token = $user->createToken('auth_token')->plainTextToken;
+                $token = $user->createToken('auth_token')->plainTextToken;
 
-            return response()->json([
-                'message' => 'Logged in with Google successfully',
-                'user' => new UserResource($user),
-                'token' => $token
-            ]);
+                return response()->json([
+                    'message' => 'Logged in with Google successfully',
+                    'user' => new UserResource($user),
+                    'token' => $token
+                ]);
 
-        } catch (\Exception $e) {
-            return response()->json(['error' => 'Invalid Google token'], 401);
+            } catch (\Exception $e) {
+                dd($e->getMessage());
+                return response()->json(['error' => 'Invalid Google token'], 401);
         }
     }
 
@@ -81,5 +84,43 @@ class SocialiteController extends Controller
     return response()->json(['message' => 'Access token refreshed']);
 }
 
+
+
+
+public function loginWithFacebook(Request $request)
+{
+    $request->validate([
+        'token' => 'required|string'
+    ]);
+
+    try {
+        $fbUser = Socialite::driver('facebook')->stateless()->userFromToken($request->token);
+
+        $user = User::updateOrCreate(
+            ['email' => $fbUser->getEmail()],
+            [
+                'first_name' => $fbUser->getName() ?? "N/A",
+                'last_name' => $fbUser->getNickname() ?? 'N/A',
+                'email' => $fbUser->getEmail(),
+                'phone' => "N/A",
+                'password' => Hash::make(Str::random(24)),
+                'img' => $fbUser->getAvatar(),
+                'city' => "N/A",
+                'country' => "N/A"
+            ]
+        );
+
+        $token = $user->createToken('auth_token')->plainTextToken;
+
+        return response()->json([
+            'message' => 'Logged in with Facebook successfully',
+            'user' => new UserResource($user),
+            'token' => $token
+        ]);
+
+    } catch (\Exception $e) {
+        return response()->json(['error' => 'Invalid Facebook token'], 401);
+    }
+}
 
 }

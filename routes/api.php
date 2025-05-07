@@ -46,7 +46,7 @@ Route::post('/login/google', [SocialiteController::class, 'loginWithGoogle']);
 // Route::get('/google/refresh-token/{user}', [SocialiteController::class, 'refreshGoogleToken']);
 //
 
-Route::post('/login/facebook', [AuthController::class, 'loginWithFacebook']);
+Route::post('/login/facebook', [SocialiteController::class, 'loginWithFacebook']);
 
 Route::post('/forgot-password', [AuthController::class, 'sendOtpEmail']);
 Route::post('/forgot-password-otp', [AuthController::class, 'forgotPasswordOtp']);

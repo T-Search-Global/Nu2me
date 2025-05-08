@@ -35,6 +35,8 @@ class ResetExpiredFeaturedListings extends Command
         $listing->update([
             'feature_check' => 0,
             'expiry_date' => null,
+
+            
         ]);
     }
 

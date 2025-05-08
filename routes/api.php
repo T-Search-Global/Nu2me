@@ -4,6 +4,7 @@ use App\Http\Controllers\Auth\AuthController;
 use App\Http\Controllers\Auth\SocialiteController;
 use App\Http\Controllers\Auth\UserController;
 use App\Http\Controllers\ListingController;
+use App\Http\Controllers\PinController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -39,6 +40,9 @@ Route::post('/listing-delete/{id}', [ListingController::class, 'destroy']);
 
 Route::post('/user/update',[AuthController::class, 'updateUser']);
 Route::get('/user/edit',[AuthController::class, 'editUser']);
+
+Route::post('/pin-create', [PinController::class, 'store']);
+
 
 });
 

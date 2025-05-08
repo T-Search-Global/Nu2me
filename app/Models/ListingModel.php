@@ -20,6 +20,9 @@ class ListingModel extends Model
         'location',
         'feature_check',
         'img',
+        'expiry_date',
+        'dimensions',
+        'sold',
     ];
 
     protected $casts = [

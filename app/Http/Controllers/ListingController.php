@@ -23,6 +23,7 @@ class ListingController extends Controller
             'category' => 'required|string',
             'price' => 'required|numeric',
             'location' => 'required|string',
+            'dimensions' => 'nullable|integer|min:0',
             'feature_check' => 'nullable|boolean',
             'img.*' => 'image|mimes:jpeg,png,jpg,gif|max:8048',
         ]);
@@ -37,6 +38,15 @@ class ListingController extends Controller
         return response()->json([
             'message' => 'Listing created successfully.',
             'listing' => $listing,
+        ]);
+    }
+
+
+    public function getListing(){
+        $listings = $this->listingService->getListing();
+        return response()->json([
+            'status' => 'true',
+            'listings' => $listings,
         ]);
     }
 
@@ -62,7 +72,8 @@ class ListingController extends Controller
             'category' => 'required|string',
             'price' => 'required|numeric',
             'location' => 'required|string',
-            'feature_check' => 'nullable|boolean',
+            'dimensions' => 'required',
+            // 'feature_check' => 'nullable|boolean',
             'img.*' => 'image|mimes:jpeg,png,jpg,gif|max:8048',
         ]);
         if ($validator->fails()) {

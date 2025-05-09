@@ -1,12 +1,14 @@
 <?php
 
-use App\Http\Controllers\Auth\AuthController;
-use App\Http\Controllers\Auth\SocialiteController;
-use App\Http\Controllers\Auth\UserController;
-use App\Http\Controllers\ListingController;
-use App\Http\Controllers\PinController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\PinController;
+use App\Http\Controllers\ListingController;
+use App\Http\Controllers\MessageController;
+use App\Http\Controllers\Auth\AuthController;
+use App\Http\Controllers\Auth\UserController;
+use App\Http\Controllers\ConversationController;
+use App\Http\Controllers\Auth\SocialiteController;
 
 
 
@@ -42,6 +44,12 @@ Route::post('/user/update',[AuthController::class, 'updateUser']);
 Route::get('/user/edit',[AuthController::class, 'editUser']);
 
 Route::post('/pin-create', [PinController::class, 'store']);
+
+Route::post('/conversations', [ConversationController::class, 'store']);
+Route::get('/conversations', [ConversationController::class, 'show']);
+
+Route::get('/conversations/{id}/messages', [MessageController::class, 'index']);
+Route::post('/conversations/{id}/messages', [MessageController::class, 'store']);
 
 
 });

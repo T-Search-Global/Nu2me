@@ -2,8 +2,9 @@
 
 namespace App\Http\Controllers;
 
-use App\Services\Listing\ListingService;
 use Illuminate\Http\Request;
+use App\Http\Resources\UserResource;
+use App\Services\Listing\ListingService;
 use Illuminate\Support\Facades\Validator;
 
 class ListingController extends Controller
@@ -49,6 +50,22 @@ class ListingController extends Controller
             'listings' => $listings,
         ]);
     }
+
+    public function getListingDetail($id)
+    {
+        $listing = $this->listingService->listingDetail($id);
+
+        if (!$listing) {
+            return response()->json(['message' => 'Listing not found.'], 404);
+        }
+
+        return response()->json([
+            'status' => 'true',
+            'listing' => $listing,
+            'user' => new UserResource($listing->user),
+        ]);
+    }
+
 
     public function edit($id)
     {

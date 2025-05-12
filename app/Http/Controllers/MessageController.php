@@ -16,11 +16,7 @@ class MessageController extends Controller
         $this->messageService = $messageService;
     }
 
-    public function index($conversationId)
-    {
-        $messages = $this->messageService->getMessages($conversationId);
-        return response()->json($messages);
-    }
+
 
     public function store(Request $request, $conversationId)
     {
@@ -35,6 +31,12 @@ class MessageController extends Controller
         );
 
         return response()->json($message);
+    }
+
+    public function show($conversationId)
+    {
+        $messages = $this->messageService->getMessages($conversationId);
+        return response()->json($messages);
     }
 
 }

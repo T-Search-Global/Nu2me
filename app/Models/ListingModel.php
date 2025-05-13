@@ -25,13 +25,20 @@ class ListingModel extends Model
         'sold',
     ];
 
+    protected $hidden = [
+        'created_at',
+        'updated_at',
+    ];
+
     protected $casts = [
         'img' => 'array',
     ];
 
+    public $timestamps = false;
+
     public function user()
     {
-        return $this->belongsTo(User::class, 'user_id'); 
+        return $this->belongsTo(User::class, 'user_id');
     }
 
     public function images()

@@ -123,9 +123,9 @@ class ListingService
 
     public function listingDetail($id)
     {
-        $listing = ListingModel::find($id);
+        $listing = ListingModel::find($id)->load('images') ?? null;
 
-        return $listing ? $listing->load('images') : null;
+        return $listing;
     }
 
     public function edit($id)

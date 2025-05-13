@@ -61,7 +61,7 @@ class ListingController extends Controller
 
         return response()->json([
             'status' => 'true',
-            'listing' => $listing,
+            'listing' => $listing->makeHidden('user'),
             'user' => new UserResource($listing->user),
         ]);
     }

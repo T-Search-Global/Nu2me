@@ -2,14 +2,15 @@
 
 namespace App\Services\Listing;
 
-use App\Models\ListingImageModel;
+use Stripe\Charge;
+use Stripe\Stripe;
+use App\Models\RatingModel;
 use App\Models\ListingModel;
 use App\Models\PaymentModel;
 use Illuminate\Http\Request;
+use App\Models\ListingImageModel;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
-use Stripe\Charge;
-use Stripe\Stripe;
 
 class ListingService
 {
@@ -187,4 +188,14 @@ class ListingService
         $listing->delete();
         return true;
     }
+
+
+    public function storeRating($userId, $rating, $description)
+{
+    return RatingModel::create([
+        'user_id' => $userId,
+        'rating' => (int) $rating, 
+        'description' => $description,
+    ]);
+}
 }

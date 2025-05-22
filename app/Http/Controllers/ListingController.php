@@ -119,4 +119,32 @@ class ListingController extends Controller
 
         return response()->json(['message' => 'Listing deleted successfully.']);
     }
+
+
+    public function storeRating(Request $request)
+{
+    $validated = $request->validate([
+        'rating' => 'required|integer|min:1|max:5',
+        'description' => 'required|string|max:255',
+    ]);
+
+    try {
+        $rating = $this->listingService->storeRating(
+            auth()->id(),
+            $validated['rating'],
+            $validated['description']
+        );
+
+        return response()->json([
+            'message' => 'Rating saved successfully.',
+            'rating' => $rating,
+        ], 201);
+
+    } catch (\Exception $e) {
+        return response()->json([
+            'message' => 'Failed to save rating.',
+            'error' => $e->getMessage(),
+        ], 500);
+    }
+}
 }

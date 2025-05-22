@@ -36,9 +36,13 @@ Route::post('/listing-create', [ListingController::class, 'store']);
 
 Route::get('/listing', [ListingController::class, 'getListing']);
 
-Route::get('/listing-edit/{id}', [ListingController::class, 'edit']);
+Route::get('/listing-edit/{id}', action: [ListingController::class, 'edit']);
 Route::post('/listing-update/{id}', [ListingController::class, 'update']);
 Route::post('/listing-delete/{id}', [ListingController::class, 'destroy']);
+
+Route::get('/listing-detail/{id}', action: [ListingController::class, 'getListingDetail']);
+
+Route::post('/rating-create', action: [ListingController::class, 'storeRating']);
 
 Route::post('/user/update',[AuthController::class, 'updateUser']);
 Route::get('/user/edit',[AuthController::class, 'editUser']);
@@ -48,8 +52,8 @@ Route::post('/pin-create', [PinController::class, 'store']);
 Route::post('/conversations', [ConversationController::class, 'store']);
 Route::get('/conversations', [ConversationController::class, 'show']);
 
-Route::get('/conversations/{id}/messages', [MessageController::class, 'index']);
 Route::post('/conversations/{id}/messages', [MessageController::class, 'store']);
+Route::get('/conversations/{id}/messages', [MessageController::class, 'show']);
 
 
 });
@@ -64,7 +68,11 @@ Route::post('/login/google', [SocialiteController::class, 'loginWithGoogle']);
 Route::post('/login/facebook', [SocialiteController::class, 'loginWithFacebook']);
 
 Route::post('/forgot-password', [AuthController::class, 'sendOtpEmail']);
+Route::post('/resend-otp', [AuthController::class, 'resendOtp']);
+
 Route::post('/forgot-password-otp', [AuthController::class, 'forgotPasswordOtp']);
 Route::post('/reset-password', [AuthController::class, 'updatePassword']);
+
+
 
 Route::middleware('auth:sanctum')->post('/logout', [AuthController::class, 'logout']);

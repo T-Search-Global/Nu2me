@@ -164,6 +164,15 @@ class AuthController extends Controller
         return response()->json($this->authService->sendOtpEmail($request->email));
     }
 
+    public function resendOtp(Request $request)
+{
+    $request->validate([
+        'email' => 'required|email|exists:users,email',
+    ]);
+
+    return response()->json($this->authService->sendOtpEmail($request->email));
+}
+
     public function forgotPasswordOtp(Request $request)
     {
         $request->validate([

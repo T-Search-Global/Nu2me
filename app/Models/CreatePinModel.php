@@ -9,7 +9,7 @@ class CreatePinModel extends Model
 {
     use HasFactory;
 
-    protected $table = 'pin';
+    protected $table = 'pins';
 
     protected $fillable = [
         'name',

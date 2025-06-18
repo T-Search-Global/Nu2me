@@ -3,43 +3,45 @@
 namespace App\Mail;
 
 use Illuminate\Bus\Queueable;
-use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Mail\Mailable;
 use Illuminate\Mail\Mailables\Content;
 use Illuminate\Mail\Mailables\Envelope;
 use Illuminate\Queue\SerializesModels;
 
-class RegisterEmail extends Mailable
+class ListingCreateMail extends Mailable
 {
     use Queueable, SerializesModels;
 
-    public $first_name;
-    public $last_name;
+    public $listing;
 
     /**
      * Create a new message instance.
      */
-    public function __construct($first_name, $last_name)
+    public function __construct($listing)
     {
-        $this->first_name = $first_name;
-        $this->last_name = $last_name;
+        $this->listing = $listing;
     }
 
-
-
+    /**
+     * Get the message envelope.
+     */
     public function envelope(): Envelope
     {
-        return new Envelope(subject: 'Register Email');
+        return new Envelope(
+            subject: 'Your Listing Has Been Created'
+        );
     }
 
+    /**
+     * Get the message content definition.
+     */
     public function content(): Content
     {
         return new Content(
-            view: 'emails.register',
+            view: 'emails.listing_created', 
             with: [
-                'first_name' => $this->first_name,
-                'last_name' => $this->last_name,
-            ],
+                'listing' => $this->listing
+            ]
         );
     }
 }

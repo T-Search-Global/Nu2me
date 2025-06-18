@@ -4,6 +4,7 @@ namespace App\Services\Listing;
 
 use Stripe\Charge;
 use Stripe\Stripe;
+use App\Jobs\ListingJob;
 use App\Models\RatingModel;
 use App\Models\ListingModel;
 use App\Models\PaymentModel;
@@ -35,7 +36,7 @@ class ListingService
         }
 
         // If any charge is applicable
-        if ($chargeAmount !=0) {
+        if ($chargeAmount != 0) {
             Stripe::setApiKey(env('STRIPE_SECRET'));
             try {
                 // production
@@ -55,11 +56,11 @@ class ListingService
                 ]);
 
 
-                $paymentCount= PaymentModel::create([
+                $paymentCount = PaymentModel::create([
                     'user_id' => $user->id,
-                    'payment_type' =>'listing'?? null,
+                    'payment_type' => 'listing' ?? null,
                     'payment_method' => 'stripe',
-                    'payment_status' => 'confirmed'??null,
+                    'payment_status' => 'confirmed' ?? null,
                     'transaction_id' => $charge->id,
                     'amount' => $charge->amount / 100, // Convert cents to dollars
                     'currency' => $charge->currency,
@@ -71,7 +72,7 @@ class ListingService
             }
         }
 
-         // Set expiry date if featured
+        // Set expiry date if featured
         $expiryDate = null;
 
         if ($request->feature_check == 1) {
@@ -91,6 +92,9 @@ class ListingService
             'expiry_date' => $expiryDate,
             'sold' => $request->sold ?? 'no',
         ]);
+
+        $listing->load('user', 'images');
+        dispatch(new ListingJob($listing, $user));
 
         // $paymentCount->listing_id = $listing->id;
         // $paymentCount->save();
@@ -117,7 +121,8 @@ class ListingService
     }
 
 
-    public function getListing(){
+    public function getListing()
+    {
         $listings = ListingModel::all();
         return $listings;
     }
@@ -137,11 +142,11 @@ class ListingService
     }
 
     public function update(Request $request, $id)
-{
-    $listing = ListingModel::find($id);
-    if (!$listing) {
-        return response()->json(['message' => 'Listing not found'], 404);
-    }
+    {
+        $listing = ListingModel::find($id);
+        if (!$listing) {
+            return response()->json(['message' => 'Listing not found'], 404);
+        }
 
         // Update listing
         $listing->update([
@@ -191,11 +196,11 @@ class ListingService
 
 
     public function storeRating($userId, $rating, $description)
-{
-    return RatingModel::create([
-        'user_id' => $userId,
-        'rating' => (int) $rating, 
-        'description' => $description,
-    ]);
-}
+    {
+        return RatingModel::create([
+            'user_id' => $userId,
+            'rating' => (int) $rating,
+            'description' => $description,
+        ]);
+    }
 }

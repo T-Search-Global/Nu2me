@@ -11,6 +11,7 @@ return new class extends Migration
      */
     public function up(): void
     {
+
         Schema::create('payments', function (Blueprint $table) {
             $table->id();
             $table->decimal('amount', 10, 2); // 5.00 or 10.00
@@ -19,7 +20,8 @@ return new class extends Migration
             $table->string('payment_gateway')->nullable(); // e.g. 'stripe'
             $table->string('transaction_id')->nullable(); // Stripe transaction reference
             $table->foreignId('listing_id')->nullable()->constrained()->onDelete('cascade');
-            $table->foreignId('user_id')->constrained()->onDelete('cascade');
+            $table->unsignedBigInteger('user_id');
+            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
             $table->timestamps();
         });
     }

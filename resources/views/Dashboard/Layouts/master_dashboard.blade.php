@@ -35,24 +35,23 @@
 
     <style>
         .modal-content {
-  border-radius: 12px;
-}
+            border-radius: 12px;
+        }
 
-.modal-header {
-  border-bottom: none;
-  border-top-left-radius: 12px;
-  border-top-right-radius: 12px;
-}
+        .modal-header {
+            border-bottom: none;
+            border-top-left-radius: 12px;
+            border-top-right-radius: 12px;
+        }
 
-.btn-success {
-  background-color: #28a745;
-  border: none;
-}
+        .btn-success {
+            background-color: #28a745;
+            border: none;
+        }
 
-.btn-success:hover {
-  background-color: #218838;
-}
-
+        .btn-success:hover {
+            background-color: #218838;
+        }
     </style>
 </head>
 
@@ -68,15 +67,14 @@
                     <div class="left-panel">
                         @php
                             $user = Auth::user();
-                            $dashboardUrl =env("APP_URL");
+                            $dashboardUrl = env('APP_URL');
                         @endphp
 
 
 
 
                         <div class="header-logo">
-                            <a href="{{ $dashboardUrl }}"><img
-                                    src="{{ asset('assets/new-images/apartmentone-logo.png') }}" alt=""></a>
+                            <a href="{{ $dashboardUrl }}"><x-logo /></a>
                         </div>
                         <div class="left-panel-menu">
                             <div class="panel-box">
@@ -85,9 +83,7 @@
                                         @php
                                             $profiledUrl = null;
                                             if (Auth::user()) {
-
-                                                    $profiledUrl = route('profile.edit');
-
+                                                $profiledUrl = route('profile.edit');
                                             }
                                         @endphp
                                         <a href="{{ $profiledUrl }}">
@@ -104,6 +100,20 @@
                                 </div>
                                 @if (Auth::user())
                                     <ul class="scroll-ul">
+
+
+
+
+
+                                        <li><a href="{{ route('payment') }}" class="payment-active">
+                                                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20"
+                                                    fill="white" viewBox="0 0 16 16">
+                                                    <path d="M0 4a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v1H0V4z" />
+                                                    <path
+                                                        d="M0 7h16v5a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V7zm2 2.5a.5.5 0 0 0 0 1h2a.5.5 0 0 0 0-1H2zm4 0a.5.5 0 0 0 0 1h4a.5.5 0 0 0 0-1H6z" />
+                                                </svg>
+                                                Payments</a></li>
+
 
 
                                         <li><a href="{{ route('profile.edit') }}" class="profile-active"><svg
@@ -129,8 +139,8 @@
                                     @csrf
                                 </form>
                                 @if (Auth::user())
-                                    <a href="{{ route('profile.edit') }}" class="profile-active"><svg
-                                            width="20" height="20" viewBox="0 0 20 20" fill="none"
+                                    <a href="{{ route('profile.edit') }}" class="profile-active"><svg width="20"
+                                            height="20" viewBox="0 0 20 20" fill="none"
                                             xmlns="http://www.w3.org/2000/svg">
                                             <path
                                                 d="M9.82055 1.34503C7.61914 1.37311 5.51579 2.26009 3.95903 3.81685C2.40227 5.37361 1.51529 7.47695 1.48721 9.67837C1.4975 10.9608 1.80365 12.2235 2.38181 13.3683C2.95997 14.5131 3.79454 15.5089 4.82055 16.2784V16.345H4.90388C6.31487 17.4263 8.04292 18.0122 9.82055 18.0122C11.5982 18.0122 13.3262 17.4263 14.7372 16.345H14.8205V16.2784C15.8466 15.5089 16.6811 14.5131 17.2593 13.3683C17.8374 12.2235 18.1436 10.9608 18.1539 9.67837C18.1258 7.47695 17.2388 5.37361 15.6821 3.81685C14.1253 2.26009 12.022 1.37311 9.82055 1.34503ZM6.54555 15.4534C6.6672 14.8962 6.97567 14.3974 7.41978 14.0397C7.86389 13.682 8.41695 13.4869 8.98721 13.4867H10.6539C11.2241 13.4869 11.7772 13.682 12.2213 14.0397C12.6654 14.3974 12.9739 14.8962 13.0955 15.4534C12.1029 16.0374 10.9722 16.3453 9.82055 16.3453C8.66888 16.3453 7.53816 16.0374 6.54555 15.4534ZM14.4955 14.3784C14.1786 13.6208 13.6448 12.9738 12.9613 12.5187C12.2778 12.0635 11.4751 11.8204 10.6539 11.82H8.98721C8.16603 11.8204 7.36327 12.0635 6.67978 12.5187C5.99628 12.9738 5.46252 13.6208 5.14555 14.3784C4.5211 13.7642 4.0238 13.033 3.68206 12.2265C3.34032 11.4201 3.16084 10.5542 3.15388 9.67837C3.17549 7.91697 3.88481 6.23381 5.1304 4.98822C6.37599 3.74263 8.05915 3.03331 9.82055 3.0117C11.5819 3.03331 13.2651 3.74263 14.5107 4.98822C15.7563 6.23381 16.4656 7.91697 16.4872 9.67837C16.4803 10.5542 16.3008 11.4201 15.959 12.2265C15.6173 13.033 15.12 13.7642 14.4955 14.3784Z"
@@ -201,6 +211,16 @@
 
                                         </div>
                                     </li>
+
+
+                                    <li><a href="{{ route('payment') }}" class="payment-active">
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20"
+                                                fill="white" viewBox="0 0 16 16">
+                                                <path d="M0 4a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v1H0V4z" />
+                                                <path
+                                                    d="M0 7h16v5a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V7zm2 2.5a.5.5 0 0 0 0 1h2a.5.5 0 0 0 0-1H2zm4 0a.5.5 0 0 0 0 1h4a.5.5 0 0 0 0-1H6z" />
+                                            </svg>
+                                            Payments</a></li>
                                     {{-- <li>
                                         <a href="{{ env('APP_HOME') }}" class=""><svg width="30"
                                                 height="31" viewBox="0 0 30 31" fill="none"
@@ -354,11 +374,6 @@
                 }
             });
         }
-
-
-
-
-
     </script>
     @yield('scripts')
 </body>

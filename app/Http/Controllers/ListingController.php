@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\ListingModel;
 use Illuminate\Http\Request;
 use App\Http\Resources\UserResource;
 use App\Services\Listing\ListingService;
@@ -16,6 +17,11 @@ class ListingController extends Controller
         $this->listingService = $listingService;
     }
 
+    public function index()
+    {
+        $listings = ListingModel::with(['user', 'images'])->orderByDesc('id')->get();
+        return view('Dashboard.listing.index', compact('listings'));
+    }
     public function store(Request $request)
     {
         $validator = Validator::make($request->all(), [
@@ -43,7 +49,8 @@ class ListingController extends Controller
     }
 
 
-    public function getListing(){
+    public function getListing()
+    {
         $listings = $this->listingService->getListing();
         return response()->json([
             'status' => 'true',
@@ -122,29 +129,28 @@ class ListingController extends Controller
 
 
     public function storeRating(Request $request)
-{
-    $validated = $request->validate([
-        'rating' => 'required|integer|min:1|max:5',
-        'description' => 'required|string|max:255',
-    ]);
+    {
+        $validated = $request->validate([
+            'rating' => 'required|integer|min:1|max:5',
+            'description' => 'required|string|max:255',
+        ]);
 
-    try {
-        $rating = $this->listingService->storeRating(
-            auth()->id(),
-            $validated['rating'],
-            $validated['description']
-        );
+        try {
+            $rating = $this->listingService->storeRating(
+                auth()->id(),
+                $validated['rating'],
+                $validated['description']
+            );
 
-        return response()->json([
-            'message' => 'Rating saved successfully.',
-            'rating' => $rating,
-        ], 201);
-
-    } catch (\Exception $e) {
-        return response()->json([
-            'message' => 'Failed to save rating.',
-            'error' => $e->getMessage(),
-        ], 500);
+            return response()->json([
+                'message' => 'Rating saved successfully.',
+                'rating' => $rating,
+            ], 201);
+        } catch (\Exception $e) {
+            return response()->json([
+                'message' => 'Failed to save rating.',
+                'error' => $e->getMessage(),
+            ], 500);
+        }
     }
-}
 }

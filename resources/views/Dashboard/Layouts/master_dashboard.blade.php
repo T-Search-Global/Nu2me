@@ -115,6 +115,15 @@
                                                 Payments</a></li>
 
 
+                                        <li><a href="{{ route('listing') }}" class="listing-active">
+                                                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20"
+                                                    fill="currentColor" viewBox="0 0 24 24">
+                                                    <path
+                                                        d="M4 4h6v6H4V4zm10 0h6v6h-6V4zM4 14h6v6H4v-6zm10 0h6v6h-6v-6z" />
+                                                </svg>
+                                                Listings</a></li>
+
+
 
                                         <li><a href="{{ route('profile.edit') }}" class="profile-active"><svg
                                                     width="31" height="30" viewBox="0 0 31 30" fill="none"
@@ -221,6 +230,14 @@
                                                     d="M0 7h16v5a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V7zm2 2.5a.5.5 0 0 0 0 1h2a.5.5 0 0 0 0-1H2zm4 0a.5.5 0 0 0 0 1h4a.5.5 0 0 0 0-1H6z" />
                                             </svg>
                                             Payments</a></li>
+
+
+                                    <li><a href="{{ route('listing') }}" class="listing-active">
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20"
+                                                fill="currentColor" viewBox="0 0 24 24">
+                                                <path d="M4 4h6v6H4V4zm10 0h6v6h-6V4zM4 14h6v6H4v-6zm10 0h6v6h-6v-6z" />
+                                            </svg>
+                                            Listings</a></li>
                                     {{-- <li>
                                         <a href="{{ env('APP_HOME') }}" class=""><svg width="30"
                                                 height="31" viewBox="0 0 30 31" fill="none"

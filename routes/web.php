@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\ListingController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\ProfileController;
@@ -32,6 +33,8 @@ Route::middleware('auth')->group(function () {
 
 
     Route::get('/payment', [PaymentController::class, 'index'])->name('payment');
+
+    Route::get('/listing', [ListingController::class, 'index'])->name('listing');
 });
 
 require __DIR__.'/auth.php';

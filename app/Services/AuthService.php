@@ -32,9 +32,8 @@ class AuthService
 
         return [
             'status' => true,
-            'message' => 'User registered successfully',
-            'access_token' => $token,
-            'token_type' => 'Bearer',
+            'message' => 'User registered Successfully',
+            'token' => $token,
         ];
     }
 

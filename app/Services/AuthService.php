@@ -55,7 +55,7 @@ class AuthService
     public function logout($user)
     {
         $user->tokens()->delete();
-        return ['message' => 'Successfully logged out'];
+        return ['message' => 'logged out Successfully'];
     }
 
     public function sendOtpEmail($email)

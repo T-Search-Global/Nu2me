@@ -21,7 +21,12 @@
         <div class="tab-content">
             <div class="tab-pane active" id="tabs-1" role="tabpanel">
                 <div class="table-responsive">
-
+                    @if (session('success'))
+                        <div class="alert alert-success alert-dismissible fade show mt-3" role="alert">
+                            {{ session('success') }}
+                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                        </div>
+                    @endif
                     <table class="table table-bordered table-hover" id="ChargeTable">
                         <thead class="thead-dark">
                             <tr>
@@ -58,40 +63,42 @@
         </div>
     </div>
 
-{{-- modal for update --}}
-<!-- Edit Charge Modal -->
-<div class="modal fade" id="editChargeModal" tabindex="-1" aria-labelledby="editChargeModalLabel" aria-hidden="true">
-  <div class="modal-dialog">
-    <form method="POST" action="{{ route('updateCharges') }}">
-        @csrf
-        @method('PUT')
-        <input type="hidden" name="id" id="charge_id">
+    {{-- modal for update --}}
+    <!-- Edit Charge Modal -->
+    <div class="modal fade" id="editChargeModal" tabindex="-1" aria-labelledby="editChargeModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <form method="POST" action="{{ route('updateCharges') }}">
+                @csrf
+                @method('PUT')
+                <input type="hidden" name="id" id="charge_id">
 
-        <div class="modal-content">
-          <div class="modal-header">
-            <h5 class="modal-title">Edit Charges</h5>
-            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-          </div>
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">Edit Charges</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
 
-          <div class="modal-body">
-              <div class="mb-3">
-                  <label for="feature_charge" class="form-label">Feature Listing Charge</label>
-                  <input type="number" step="0.01" class="form-control" name="feature_listing_amount" id="feature_charge" required>
-              </div>
-              <div class="mb-3">
-                  <label for="additional_charge" class="form-label">Additional Listing Charge</label>
-                  <input type="number" step="0.01" class="form-control" name="additional_listing_amount" id="additional_charge" required>
-              </div>
-          </div>
+                    <div class="modal-body">
+                        <div class="mb-3">
+                            <label for="feature_charge" class="form-label">Feature Listing Charge</label>
+                            <input type="number" step="0.01" class="form-control" name="feature_listing_amount"
+                                id="feature_charge" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="additional_charge" class="form-label">Additional Listing Charge</label>
+                            <input type="number" step="0.01" class="form-control" name="additional_listing_amount"
+                                id="additional_charge" required>
+                        </div>
+                    </div>
 
-          <div class="modal-footer">
-            <button type="submit" class="btn btn-success">Save Changes</button>
-            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-          </div>
+                    <div class="modal-footer">
+                        <button type="submit" class="btn btn-success">Save Changes</button>
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    </div>
+                </div>
+            </form>
         </div>
-    </form>
-  </div>
-</div>
+    </div>
 
 
 
@@ -124,10 +131,10 @@
 
 
         function fillChargeModal(id, feature, additional) {
-        document.getElementById('charge_id').value = id;
-        document.getElementById('feature_charge').value = feature;
-        document.getElementById('additional_charge').value = additional;
-    }
-   </script>
+            document.getElementById('charge_id').value = id;
+            document.getElementById('feature_charge').value = feature;
+            document.getElementById('additional_charge').value = additional;
+        }
+    </script>
 @endsection
 @endsection

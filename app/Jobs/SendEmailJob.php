@@ -23,6 +23,6 @@ class SendEmailJob implements ShouldQueue
 
     public function handle(): void
     {
-        Mail::to($this->user->email)->send(new VerifyEmail($this->user->id, $this->user->name, $this->user->email));
+        Mail::to($this->user->email)->send(new VerifyEmail($this->user->id, $this->user->first_name, $this->user->email));
     }
 }

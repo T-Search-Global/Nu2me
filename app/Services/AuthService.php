@@ -48,8 +48,8 @@ class AuthService
         $token = $user->createToken('auth_token')->plainTextToken;
 
         return [
-            'access_token' => $token,
-            'token_type' => 'Bearer',
+            'token' => $token,
+            'message' => 'Login Successfully',
         ];
     }
 

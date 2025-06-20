@@ -9,6 +9,7 @@ use App\Models\RatingModel;
 use App\Models\ListingModel;
 use App\Models\PaymentModel;
 use Illuminate\Http\Request;
+use App\Models\ListingCharge;
 use App\Models\ListingImageModel;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
@@ -25,14 +26,17 @@ class ListingService
         // Count current user's listings
         $listingCount = $user->listings()->count();
         $chargeAmount = 0;
+        // Get admin-defined charges
+        $charges = ListingCharge::first(); // Optional: use default values if null
 
-        // FEATURE CHECK: $10 always
+        $featurePrice = $charges->feature_listing_amount ?? 10;
+        $additionalPrice = $charges->additional_listing_amount ?? 5;
+
         if ($request->feature_check == 1) {
-            $chargeAmount = 10;
+            $chargeAmount += $featurePrice;
         }
-        // SECOND LISTING: $5
         if ($listingCount >= 1) {
-            $chargeAmount += 5;
+            $chargeAmount += $additionalPrice;
         }
 
         // If any charge is applicable
@@ -59,7 +63,7 @@ class ListingService
                 $paymentCount = PaymentModel::create([
                     'user_id' => $user->id,
                     'payment_type' => 'listing' ?? null,
-                    'payment_method' => 'stripe',
+                    'payment_gateway' => 'stripe',
                     'payment_status' => 'confirmed' ?? null,
                     'transaction_id' => $charge->id,
                     'amount' => $charge->amount / 100, // Convert cents to dollars

@@ -35,6 +35,13 @@ Route::middleware('auth')->group(function () {
     Route::get('/payment', [PaymentController::class, 'index'])->name('payment');
 
     Route::get('/listing', [ListingController::class, 'index'])->name('listing');
+
+
+    Route::get('/listing/listing-charges', [ListingController::class, 'listingCharges'])->name('listingCharges');
+
+    Route::put('/charge/update', [ListingController::class, 'updateCharge'])->name('updateCharges');
+
+
 });
 
 require __DIR__.'/auth.php';

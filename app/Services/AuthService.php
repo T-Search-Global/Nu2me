@@ -40,7 +40,9 @@ class AuthService
     public function login($credentials)
     {
         if (!Auth::attempt($credentials)) {
-            return response()->json(['message' => 'Invalid login details'], 401);
+            return [
+                'message' => 'Invalid login details'
+            ];
         }
 
         $user = User::where('email', $credentials['email'])->firstOrFail();

@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\ListingModel;
 use Illuminate\Http\Request;
 use App\Http\Resources\UserResource;
+use App\Models\ListingCharge;
 use App\Services\Listing\ListingService;
 use Illuminate\Support\Facades\Validator;
 
@@ -153,4 +154,30 @@ class ListingController extends Controller
             ], 500);
         }
     }
+
+
+    // use for admin
+    public function listingCharges(){
+        $charge = ListingCharge::first();
+
+        return view('Dashboard.listingCharge.index', compact('charge'));
+    }
+
+
+    public function updateCharge(Request $request)
+{
+    $request->validate([
+        'id' => 'required|exists:listing_charges,id',
+        'feature_listing_amount' => 'required|numeric|min:0',
+        'additional_listing_amount' => 'required|numeric|min:0',
+    ]);
+
+    ListingCharge::where('id', $request->id)->update([
+        'feature_listing_amount' => $request->feature_listing_amount,
+        'additional_listing_amount' => $request->additional_listing_amount,
+    ]);
+
+    return redirect()->back()->with('success', 'Charges updated successfully.');
+}
+
 }

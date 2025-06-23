@@ -12,6 +12,7 @@ class UserController extends Controller
 {
     public function profile(Request $request)
     {
+
         $user = auth()->user();
 
         $validator = Validator::make($request->all(), [
@@ -21,7 +22,7 @@ class UserController extends Controller
             'phone' => 'sometimes|digits_between:7,15|unique:users,phone,' . $user->id,
             'city' => 'sometimes|string|max:255',
             'country' => 'sometimes|string|max:255',
-            'password' => 'sometimes|string|min:6|confirmed',
+            // 'password' => 'sometimes|string|min:6|confirmed',
             'img' => 'sometimes|image|mimes:jpeg,png,jpg,gif|max:8048',
         ]);
 
@@ -50,9 +51,9 @@ class UserController extends Controller
         $user->country = $request->country ?? $user->country;
 
         // Handle password update
-        if ($request->filled('password')) {
-            $user->password = bcrypt($request->password);
-        }
+        // if ($request->filled('password')) {
+        //     $user->password = bcrypt($request->password);
+        // }
 
         $user->save();
 

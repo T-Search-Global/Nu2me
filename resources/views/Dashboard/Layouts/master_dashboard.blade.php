@@ -133,6 +133,18 @@
                                                         d="M0 7h16v5a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V7zm2 2.5a.5.5 0 0 0 0 1h2a.5.5 0 0 0 0-1H2zm4 0a.5.5 0 0 0 0 1h4a.5.5 0 0 0 0-1H6z" />
                                                 </svg>
                                                 Listing Charge</a></li>
+
+
+                                        <li><a href="{{ route('announcements.index') }}" class="announcement-active">
+                                                <svg xmlns="http://www.w3.org/2000/svg" width="68" height="68"
+                                                    fill="white" viewBox="0 0 24 24" stroke="white" stroke-width="2">
+                                                    <path d="M3 11V9a1 1 0 0 1 1-1h3l4-3v12l-4-3H4a1 1 0 0 1-1-1z">
+                                                    </path>
+                                                    <path d="M14 9a3 3 0 0 1 0 6"></path>
+                                                </svg>
+
+
+                                                Announcement Notifications</a></li>
                                     </ul>
                                 @endif
 
@@ -248,14 +260,26 @@
 
 
 
-                                     <li><a href="{{ route('listingCharges') }}" class="profile-active">
-                                                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20"
-                                                    fill="white" viewBox="0 0 16 16">
-                                                    <path d="M0 4a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v1H0V4z" />
-                                                    <path
-                                                        d="M0 7h16v5a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V7zm2 2.5a.5.5 0 0 0 0 1h2a.5.5 0 0 0 0-1H2zm4 0a.5.5 0 0 0 0 1h4a.5.5 0 0 0 0-1H6z" />
-                                                </svg>
-                                                Listing Charge</a></li>
+                                    <li><a href="{{ route('listingCharges') }}" class="profile-active">
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20"
+                                                fill="white" viewBox="0 0 16 16">
+                                                <path d="M0 4a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v1H0V4z" />
+                                                <path
+                                                    d="M0 7h16v5a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V7zm2 2.5a.5.5 0 0 0 0 1h2a.5.5 0 0 0 0-1H2zm4 0a.5.5 0 0 0 0 1h4a.5.5 0 0 0 0-1H6z" />
+                                            </svg>
+                                            Listing Charge</a></li>
+
+                                    <li><a href="{{ route('announcements.index') }}" class="announcement-active">
+                                       
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20"
+                                                fill="white" viewBox="0 0 16 16" stroke="white" stroke-width="2">
+                                                <path d="M3 11V9a1 1 0 0 1 1-1h3l4-3v12l-4-3H4a1 1 0 0 1-1-1z">
+                                                </path>
+                                                <path d="M14 9a3 3 0 0 1 0 6"></path>
+                                            </svg>
+
+
+                                            Announcement Notifications</a></li>
 
 
                                     <li>

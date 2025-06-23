@@ -51,6 +51,7 @@ class AuthService
         return [
             'token' => $token,
             'message' => 'Login Successfully',
+            'userDetails'=> new UserResource($user),
         ];
     }
 

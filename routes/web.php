@@ -1,9 +1,10 @@
 <?php
 
-use App\Http\Controllers\ListingController;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\ListingController;
 use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\Admin\AnnouncementController;
 
 /*
 |--------------------------------------------------------------------------
@@ -36,11 +37,14 @@ Route::middleware('auth')->group(function () {
 
     Route::get('/listing', [ListingController::class, 'index'])->name('listing');
 
-
+// admin
     Route::get('/listing/listing-charges', [ListingController::class, 'listingCharges'])->name('listingCharges');
 
     Route::put('/charge/update', [ListingController::class, 'updateCharge'])->name('updateCharges');
 
+    Route::get('/announcement', [AnnouncementController::class, 'index'])->name('announcements.index');
+    Route::post('/announcement/store', [AnnouncementController::class, 'store'])->name('announcements.store');
+    Route::post('/announcement/store/{id}', [AnnouncementController::class, 'destroy'])->name('announcements.destroy');
 
 });
 

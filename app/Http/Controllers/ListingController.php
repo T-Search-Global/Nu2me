@@ -4,8 +4,9 @@ namespace App\Http\Controllers;
 
 use App\Models\ListingModel;
 use Illuminate\Http\Request;
-use App\Http\Resources\UserResource;
 use App\Models\ListingCharge;
+use App\Http\Resources\UserResource;
+use Illuminate\Support\Facades\Http;
 use App\Services\Listing\ListingService;
 use Illuminate\Support\Facades\Validator;
 
@@ -178,6 +179,21 @@ class ListingController extends Controller
     ]);
 
     return redirect()->back()->with('success', 'Charges updated successfully.');
+}
+
+function sendNotification($playerId, $title, $message)
+{
+    $response = Http::withHeaders([
+        'Authorization' => 'Basic YOUR_ONESIGNAL_REST_API_KEY',
+        'Content-Type' => 'application/json',
+    ])->post('https://onesignal.com/api/v1/notifications', [
+        'app_id' => 'b600c223-1399-4922-ab6a-0f95bd2bc420',
+        'include_player_ids' => [$playerId],
+        'headings' => ['en' => $title],
+        'contents' => ['en' => $message],
+    ]);
+
+    return $response->json();
 }
 
 }

@@ -11,7 +11,9 @@ use App\Models\PaymentModel;
 use Illuminate\Http\Request;
 use App\Models\ListingCharge;
 use App\Models\ListingImageModel;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Storage;
 
 class ListingService
@@ -99,6 +101,12 @@ class ListingService
 
         $listing->load('user', 'images');
         dispatch(new ListingJob($listing, $user));
+
+        // ✅ Real-time notification to only that user
+        if ($user->id) {
+            $this->sendOneSignalNotification($user->id, 'Your listing "' . $listing->name . '" has been created successfully.', true);
+        }
+
 
         // $paymentCount->listing_id = $listing->id;
         // $paymentCount->save();
@@ -207,4 +215,31 @@ class ListingService
             'description' => $description,
         ]);
     }
+
+
+public function sendOneSignalNotification($playerOrExternalId, $message, $useExternal = false)
+{
+    $payload = [
+        'app_id' => config('onesignal.app_id'),
+        'contents' => ['en' => $message],
+        'data' => ['message' => 'Listing Approved'],
+    ];
+
+    // 🔥 Cast to string to avoid OneSignal error
+    $payload[$useExternal ? 'include_external_user_ids' : 'include_player_ids'] = [(string) $playerOrExternalId];
+
+    $response = Http::withHeaders([
+        'Authorization' => 'Basic ' . config('onesignal.rest_api_key'),
+        'Accept' => 'application/json',
+        'Content-Type' => 'application/json',
+    ])->post('https://onesignal.com/api/v1/notifications', $payload);
+
+    if ($response->failed()) {
+        Log::error('OneSignal notification failed:', [$response->body()]);
+    }
+
+    Log::info('OneSignal Response:', [$response->json()]);
+}
+
+
 }

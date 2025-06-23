@@ -3,9 +3,10 @@
 namespace App\Http\Controllers\Auth;
 
 use \Storage;
+use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\UserResource;
-use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
 
 class UserController extends Controller
@@ -62,6 +63,17 @@ class UserController extends Controller
             'user' => new UserResource($user)
         ], 200);
     }
+    public function deleteAccount(Request $request)
+    {
+        $user = Auth::user();
 
+        if (!$user) {
+            return response()->json(['message' => 'Unauthorized'], 401);
+        }
 
+        // ✅ Soft delete user
+        $user->delete();
+
+        return response()->json(['message' => 'Account deleted successfully']);
+    }
 }

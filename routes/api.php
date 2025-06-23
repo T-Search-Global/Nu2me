@@ -31,7 +31,7 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 
 Route::middleware('auth:sanctum')->group(function () {
 Route::post('/user-update', [UserController::class, 'profile']);
-
+Route::post ('/delete-account', [UserController::class, 'deleteAccount']);
 Route::post('/listing-create', [ListingController::class, 'store']);
 
 Route::get('/listing', [ListingController::class, 'getListing']);

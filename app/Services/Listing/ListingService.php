@@ -135,23 +135,59 @@ class ListingService
 
     public function getListing()
     {
-        $listings = ListingModel::with('images')->get();
+        $listings = ListingModel::with(['images'])
+            ->withAvg('ratings', 'rating') // this gives `ratings_avg_rating`
+            ->get();
+
+        // Add average_rating manually & hide actual ratings
+        $listings = $listings->map(function ($listing) {
+            $listing->average_rating = round($listing->ratings_avg_rating ?? 0, 1);
+            unset($listing->ratings_avg_rating); // optional cleanup
+            unset($listing->ratings); // hide ratings
+            return $listing;
+        });
+
         return $listings;
     }
 
-    public function listingDetail($id)
-    {
-        $listing = ListingModel::find($id)->load('images') ?? null;
 
-        return $listing;
-    }
+
+    public function listingDetail($id)
+{
+    $listing = ListingModel::with(['images', 'user'])
+        ->withAvg('ratings', 'rating')
+        ->findOrFail($id);
+
+    // Average rating calculate and assign
+    $listing->average_rating = round($listing->ratings_avg_rating ?? 0, 1);
+
+    // Remove ratings and ratings_avg_rating from response
+    unset($listing->ratings_avg_rating);
+    unset($listing->ratings);
+
+    return $listing;
+}
 
     public function edit($id)
-    {
-        $listing = ListingModel::find($id);
+{
+    $listing = ListingModel::with(['images'])
+        ->withAvg('ratings', 'rating')
+        ->find($id);
 
-        return $listing ? $listing->load('images') : null;
+    if (!$listing) {
+        return null;
     }
+
+    // Add average rating
+    $listing->average_rating = round($listing->ratings_avg_rating ?? 0, 1);
+
+    // Remove ratings and ratings_avg_rating from output
+    unset($listing->ratings_avg_rating);
+    unset($listing->ratings);
+
+    return $listing;
+}
+
 
     public function update(Request $request, $id)
     {
@@ -207,39 +243,49 @@ class ListingService
     }
 
 
-    public function storeRating($userId, $rating, $description)
+    public function storeRating($userId, $rating, $description, $listingId)
     {
+        // Check if rating already exists for this user and listing
+        $exists = RatingModel::where('user_id', $userId)
+            ->where('listing_id', $listingId)
+            ->exists();
+
+        if ($exists) {
+            throw new \Exception("You have already rated this listing.");
+        }
+
+        // If not exists, then create new rating
         return RatingModel::create([
             'user_id' => $userId,
             'rating' => (int) $rating,
             'description' => $description,
+            'listing_id' => $listingId,
         ]);
     }
 
 
-public function sendOneSignalNotification($playerOrExternalId, $message, $useExternal = false)
-{
-    $payload = [
-        'app_id' => config('onesignal.app_id'),
-        'contents' => ['en' => $message],
-        'data' => ['message' => 'Listing Approved'],
-    ];
 
-    // 🔥 Cast to string to avoid OneSignal error
-    $payload[$useExternal ? 'include_external_user_ids' : 'include_player_ids'] = [(string) $playerOrExternalId];
+    public function sendOneSignalNotification($playerOrExternalId, $message, $useExternal = false)
+    {
+        $payload = [
+            'app_id' => config('onesignal.app_id'),
+            'contents' => ['en' => $message],
+            'data' => ['message' => 'Listing Approved'],
+        ];
 
-    $response = Http::withHeaders([
-        'Authorization' => 'Basic ' . config('onesignal.rest_api_key'),
-        'Accept' => 'application/json',
-        'Content-Type' => 'application/json',
-    ])->post('https://onesignal.com/api/v1/notifications', $payload);
+        // 🔥 Cast to string to avoid OneSignal error
+        $payload[$useExternal ? 'include_external_user_ids' : 'include_player_ids'] = [(string) $playerOrExternalId];
 
-    if ($response->failed()) {
-        Log::error('OneSignal notification failed:', [$response->body()]);
+        $response = Http::withHeaders([
+            'Authorization' => 'Basic ' . config('onesignal.rest_api_key'),
+            'Accept' => 'application/json',
+            'Content-Type' => 'application/json',
+        ])->post('https://onesignal.com/api/v1/notifications', $payload);
+
+        if ($response->failed()) {
+            Log::error('OneSignal notification failed:', [$response->body()]);
+        }
+
+        Log::info('OneSignal Response:', [$response->json()]);
     }
-
-    Log::info('OneSignal Response:', [$response->json()]);
-}
-
-
 }

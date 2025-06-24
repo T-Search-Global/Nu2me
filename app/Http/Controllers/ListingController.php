@@ -76,19 +76,20 @@ class ListingController extends Controller
     }
 
 
-    public function edit($id)
-    {
-        $listing = $this->listingService->edit($id);
+   public function edit($id)
+{
+    $listing = $this->listingService->edit($id);
 
-        if (!$listing) {
-            return response()->json(['message' => 'Listing not found.'], 404);
-        }
-
-        return response()->json([
-            'status' => 'true',
-            'listing' => $listing,
-        ]);
+    if (!$listing) {
+        return response()->json(['message' => 'Listing not found.'], 404);
     }
+
+    return response()->json([
+        'status' => 'true',
+        'listing' => $listing,
+    ]);
+}
+
 
     public function update(Request $request, $id)
     {
@@ -131,30 +132,32 @@ class ListingController extends Controller
 
 
     public function storeRating(Request $request)
-    {
-        $validated = $request->validate([
-            'rating' => 'required|integer|min:1|max:5',
-            'description' => 'required|string|max:255',
-        ]);
+{
+    $validated = $request->validate([
+        'rating' => 'required|integer|min:1|max:5',
+        'description' => 'nullable|string',
+        'listing_id' => 'required|exists:listings,id',
+    ]);
 
-        try {
-            $rating = $this->listingService->storeRating(
-                auth()->id(),
-                $validated['rating'],
-                $validated['description']
-            );
+    try {
+        $rating = $this->listingService->storeRating(
+            auth()->id(),
+            $validated['rating'],
+            $validated['description'],
+            $validated['listing_id']
+        );
 
-            return response()->json([
-                'message' => 'Rating saved successfully.',
-                'rating' => $rating,
-            ], 201);
-        } catch (\Exception $e) {
-            return response()->json([
-                'message' => 'Failed to save rating.',
-                'error' => $e->getMessage(),
-            ], 500);
-        }
+        return response()->json([
+            'message' => 'Rating saved successfully.',
+            'rating' => $rating,
+        ], 201);
+    } catch (\Exception $e) {
+        return response()->json([
+            'message' => 'Failed to save rating.',
+            'error' => $e->getMessage(),
+        ], 400); // Changed from 500 to 400 for user input issue
     }
+}
 
 
     // use for admin

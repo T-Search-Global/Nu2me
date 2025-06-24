@@ -41,9 +41,9 @@ Route::get('/listing-edit/{id}', action: [ListingController::class, 'edit']);
 Route::post('/listing-update/{id}', [ListingController::class, 'update']);
 Route::post('/listing-delete/{id}', [ListingController::class, 'destroy']);
 
-Route::get('/listing-detail/{id}', action: [ListingController::class, 'getListingDetail']);
+Route::get('/listing-detail/{id}',  [ListingController::class, 'getListingDetail']);
 
-Route::post('/rating-create', action: [ListingController::class, 'storeRating']);
+Route::post('/rating-create',  [ListingController::class, 'storeRating']);
 
 Route::post('/user/update',[AuthController::class, 'updateUser']);
 Route::get('/user/edit',[AuthController::class, 'editUser']);

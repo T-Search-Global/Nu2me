@@ -2,8 +2,9 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
+use App\Models\ListingModel;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class RatingModel extends Model
 {
@@ -15,6 +16,7 @@ class RatingModel extends Model
         'rating',
         'description',
         'user_id',
+        'listing_id',
     ];
 
     public $timestamps = false;
@@ -22,9 +24,21 @@ class RatingModel extends Model
     protected $casts = [
         'rating' => 'integer',
     ];
-    
-    public function user()
+
+
+      protected $hidden = [
+        'created_at',
+        'updated_at',
+        'user_id',
+        'listing_id',
+    ];
+   public function user()
     {
         return $this->belongsTo(User::class);
+    }
+
+    public function listing()
+    {
+        return $this->belongsTo(ListingModel::class);
     }
 }

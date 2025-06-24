@@ -2,9 +2,10 @@
 
 namespace App\Models;
 
+use App\Models\RatingModel;
 use App\Models\ListingImageModel;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class ListingModel extends Model
 {
@@ -48,5 +49,8 @@ class ListingModel extends Model
         return $this->hasMany(ListingImageModel::class, 'listing_id'); // explicitly set correct foreign key
     }
 
-
+    public function ratings()
+    {
+        return $this->hasMany(RatingModel::class,'listing_id');
+    }
 }

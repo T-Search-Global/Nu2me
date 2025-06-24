@@ -135,7 +135,7 @@ class ListingService
 
     public function getListing()
     {
-        $listings = ListingModel::all();
+        $listings = ListingModel::with('images')->get();
         return $listings;
     }
 

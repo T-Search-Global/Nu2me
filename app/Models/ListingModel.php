@@ -28,6 +28,8 @@ class ListingModel extends Model
     protected $hidden = [
         'created_at',
         'updated_at',
+        'expiry_date',
+        'deleted_at',
     ];
 
     protected $casts = [

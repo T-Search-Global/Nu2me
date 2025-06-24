@@ -145,6 +145,22 @@
 
 
                                                 Announcement Notifications</a></li>
+
+
+
+                                                <li><a href="{{ route('admin.events.index') }}" class="event-active">
+
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20"
+                                                fill="white" viewBox="0 0 16 16" stroke="white" stroke-width="2">
+                                                <path d="M3 11V9a1 1 0 0 1 1-1h3l4-3v12l-4-3H4a1 1 0 0 1-1-1z">
+                                                </path>
+                                                <path d="M14 9a3 3 0 0 1 0 6"></path>
+                                            </svg>
+
+
+                                            Events</a></li>
+
+                                    <li>
                                     </ul>
                                 @endif
 
@@ -270,7 +286,7 @@
                                             Listing Charge</a></li>
 
                                     <li><a href="{{ route('announcements.index') }}" class="announcement-active">
-                                       
+
                                             <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20"
                                                 fill="white" viewBox="0 0 16 16" stroke="white" stroke-width="2">
                                                 <path d="M3 11V9a1 1 0 0 1 1-1h3l4-3v12l-4-3H4a1 1 0 0 1-1-1z">
@@ -280,7 +296,17 @@
 
 
                                             Announcement Notifications</a></li>
+                                    <li><a href="{{ route('admin.events.index') }}" class="event-active">
 
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20"
+                                                fill="white" viewBox="0 0 16 16" stroke="white" stroke-width="2">
+                                                <path d="M3 11V9a1 1 0 0 1 1-1h3l4-3v12l-4-3H4a1 1 0 0 1-1-1z">
+                                                </path>
+                                                <path d="M14 9a3 3 0 0 1 0 6"></path>
+                                            </svg>
+
+
+                                            Events</a></li>
 
                                     <li>
                                         <a href="javascript:void(0);" onclick="confirmLogout()"

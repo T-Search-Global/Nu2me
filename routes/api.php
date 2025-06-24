@@ -7,6 +7,7 @@ use App\Http\Controllers\ListingController;
 use App\Http\Controllers\MessageController;
 use App\Http\Controllers\Auth\AuthController;
 use App\Http\Controllers\Auth\UserController;
+use App\Http\Controllers\Admin\EventController;
 use App\Http\Controllers\ConversationController;
 use App\Http\Controllers\Auth\SocialiteController;
 
@@ -53,7 +54,11 @@ Route::post('/conversations', [ConversationController::class, 'store']);
 Route::get('/conversations', [ConversationController::class, 'show']);
 
 Route::post('/conversations/{id}/messages', [MessageController::class, 'store']);
+
 Route::get('/conversations/{id}/messages', [MessageController::class, 'show']);
+
+
+Route::get('/events/show', [EventController::class, 'events'])->name('events');
 
 
 });

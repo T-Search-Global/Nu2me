@@ -22,6 +22,13 @@ class ListingImageModel extends Model
 
     protected $appends = ['url'];
 
+     protected $hidden = [
+        'created_at',
+        'updated_at',
+        'id',
+        'listing_id',
+        'image_path',
+    ];
     public function getUrlAttribute()
     {
         return asset('storage/' . $this->image_path);

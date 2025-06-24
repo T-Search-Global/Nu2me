@@ -4,6 +4,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ListingController;
 use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\Admin\EventController;
 use App\Http\Controllers\Admin\AnnouncementController;
 
 /*
@@ -32,6 +33,11 @@ Route::middleware('auth')->group(function () {
 
 
 
+  Route::get('events', [EventController::class, 'index'])->name('admin.events.index');
+    Route::post('events', [EventController::class, 'store'])->name('admin.events.store');
+    Route::delete('events/destroy/{id}', [EventController::class, 'destroy'])->name('admin.events.destroy');
+
+
 
     Route::get('/payment', [PaymentController::class, 'index'])->name('payment');
 
@@ -44,7 +50,7 @@ Route::middleware('auth')->group(function () {
 
     Route::get('/announcement', [AnnouncementController::class, 'index'])->name('announcements.index');
     Route::post('/announcement/store', [AnnouncementController::class, 'store'])->name('announcements.store');
-    Route::post('/announcement/store/{id}', [AnnouncementController::class, 'destroy'])->name('announcements.destroy');
+    Route::post('/announcement/destroy/{id}', [AnnouncementController::class, 'destroy'])->name('announcements.destroy');
 
 });
 

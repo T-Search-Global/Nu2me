@@ -17,15 +17,30 @@ class ConversationModel extends Model
         'listing_id',
     ];
 
-    public function sender(){
+    public function sender()
+    {
         return $this->belongsTo(User::class, 'sender_id');
     }
-    
-    public function receiver(){
+
+    public function receiver()
+    {
         return $this->belongsTo(User::class, 'receiver_id');
     }
 
-    public function listing(){
+
+    public function listing()
+    {
         return $this->belongsTo(ListingModel::class, 'listing_id');
+    }
+
+
+    public function messages()
+    {
+        return $this->hasMany(MessageModel::class, 'conversation_id');
+    }
+
+    public function latestMessage()
+    {
+        return $this->hasOne(MessageModel::class, 'conversation_id')->latestOfMany();
     }
 }

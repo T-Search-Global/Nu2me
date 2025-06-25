@@ -76,7 +76,7 @@ class EventController extends Controller
      $events = Event::all()->map(function ($event) {
         return [
             'id' => $event->id,
-            'name' => $event->name,
+            // 'name' => $event->name,
             'image' => $event->image ? asset('storage/' . $event->image) : null,
         ];
     });

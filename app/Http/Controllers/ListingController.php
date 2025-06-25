@@ -153,7 +153,7 @@ class ListingController extends Controller
         ], 201);
     } catch (\Exception $e) {
         return response()->json([
-            'message' => 'Failed to save rating.',
+            'message' => $e->getMessage(),
             'error' => $e->getMessage(),
         ], 400); // Changed from 500 to 400 for user input issue
     }

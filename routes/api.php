@@ -42,6 +42,7 @@ Route::post('/listing-update/{id}', [ListingController::class, 'update']);
 Route::post('/listing-delete/{id}', [ListingController::class, 'destroy']);
 
 Route::get('/listing-detail/{id}',  [ListingController::class, 'getListingDetail']);
+Route::get('/listing-search',  [ListingController::class, 'listingSearch']);
 
 Route::post('/rating-create',  [ListingController::class, 'storeRating']);
 

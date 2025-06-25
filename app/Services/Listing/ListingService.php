@@ -136,14 +136,17 @@ class ListingService
     public function getListing()
     {
         $listings = ListingModel::with(['images'])
-            ->withAvg('ratings', 'rating') // this gives `ratings_avg_rating`
+            ->withAvg('ratings', 'rating')
             ->get();
 
-        // Add average_rating manually & hide actual ratings
         $listings = $listings->map(function ($listing) {
-            $listing->average_rating = round($listing->ratings_avg_rating ?? 0, 1);
-            unset($listing->ratings_avg_rating); // optional cleanup
-            unset($listing->ratings); // hide ratings
+            // Convert to string using number_format or (string) casting
+            $average = round($listing->ratings_avg_rating ?? 0, 1);
+            $listing->average_rating = $average == 0 ? "0" : number_format($average, 1);
+
+            unset($listing->ratings_avg_rating);
+            unset($listing->ratings);
+
             return $listing;
         });
 
@@ -152,41 +155,46 @@ class ListingService
 
 
 
+
     public function listingDetail($id)
-{
-    $listing = ListingModel::with(['images', 'user'])
-        ->withAvg('ratings', 'rating')
-        ->findOrFail($id);
+    {
+        $listing = ListingModel::with(['images', 'user'])
+            ->withAvg('ratings', 'rating')
+            ->findOrFail($id);
 
-    // Average rating calculate and assign
-    $listing->average_rating = round($listing->ratings_avg_rating ?? 0, 1);
+        // Average rating calculate and assign
+        $average = $listing->average_rating = round($listing->ratings_avg_rating ?? 0, 1);
+        $listing->average_rating = $average == 0 ? "0" : number_format($average, 1);
+        // Remove ratings and ratings_avg_rating from response
+        unset($listing->ratings_avg_rating);
+        unset($listing->ratings);
 
-    // Remove ratings and ratings_avg_rating from response
-    unset($listing->ratings_avg_rating);
-    unset($listing->ratings);
-
-    return $listing;
-}
-
-    public function edit($id)
-{
-    $listing = ListingModel::with(['images'])
-        ->withAvg('ratings', 'rating')
-        ->find($id);
-
-    if (!$listing) {
-        return null;
+        return $listing;
     }
 
-    // Add average rating
-    $listing->average_rating = round($listing->ratings_avg_rating ?? 0, 1);
+    public function edit($id)
+    {
+        $listing = ListingModel::with(['images'])
+            ->withAvg('ratings', 'rating')
+            ->find($id);
 
-    // Remove ratings and ratings_avg_rating from output
-    unset($listing->ratings_avg_rating);
-    unset($listing->ratings);
+        if (!$listing) {
+            return null;
+        }
 
-    return $listing;
-}
+        // Calculate average
+        $average = round($listing->ratings_avg_rating ?? 0, 1);
+
+        // Convert to string: if zero, show "0", else keep 1 decimal like "4.5"
+        $listing->average_rating = $average == 0 ? "0" : number_format($average, 1);
+
+        // Cleanup
+        unset($listing->ratings_avg_rating);
+        unset($listing->ratings);
+
+        return $listing;
+    }
+
 
 
     public function update(Request $request, $id)
@@ -287,5 +295,38 @@ class ListingService
         }
 
         Log::info('OneSignal Response:', [$response->json()]);
+    }
+
+
+    public function searchListings(Request $request)
+    {
+        $query = ListingModel::with(['images'])
+            ->whereNull('deleted_at');
+
+        if ($request->filled('name')) {
+            $query->where('name', 'like', '%' . $request->name . '%');
+        }
+
+        if ($request->filled('category')) {
+            $query->where('category', $request->category);
+        }
+
+        if ($request->filled('location')) {
+            $query->where('location', $request->location);
+        }
+
+        if ($request->filled('min_price')) {
+            $query->where('price', '>=', $request->min_price);
+        }
+
+        if ($request->filled('max_price')) {
+            $query->where('price', '<=', $request->max_price);
+        }
+
+        if ($request->filled('feature_check')) {
+            $query->where('feature_check', $request->feature_check);
+        }
+
+        return $query->orderBy('id', 'desc')->paginate(10);
     }
 }

@@ -20,14 +20,6 @@ class ConversationService
         ]);
     }
 
-    // public function getUserConversations($userId)
-    // {
-    //     return ConversationModel::where('sender_id', $userId)
-    //         ->orWhere('receiver_id', $userId)
-    //         ->with(['sender', 'receiver', 'listing'])
-    //         ->latest()
-    //         ->get();
-    // }
 
     public function getUserConversations($authUserId)
     {

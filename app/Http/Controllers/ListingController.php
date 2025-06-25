@@ -199,4 +199,13 @@ function sendNotification($playerId, $title, $message)
     return $response->json();
 }
 
+
+
+
+
+public function listingSearch(Request $request)
+    {
+        $listings = $this->listingService->searchListings($request);
+        return response()->json($listings);
+    }
 }

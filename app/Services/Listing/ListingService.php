@@ -327,6 +327,6 @@ class ListingService
             $query->where('feature_check', $request->feature_check);
         }
 
-        return $query->orderBy('id', 'desc')->paginate(10);
+        return $query->orderBy('id', 'desc')->get();
     }
 }

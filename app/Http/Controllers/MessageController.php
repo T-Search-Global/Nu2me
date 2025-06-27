@@ -21,13 +21,15 @@ class MessageController extends Controller
     public function store(Request $request, $conversationId)
     {
         $request->validate([
-            'message' => 'required|string'
+            'message' => 'nullable|string',
+             'attachment.*' => 'nullable|file|mimes:jpg,jpeg,png,pdf,docx,mp4|max:10240'
         ]);
 
         $message = $this->messageService->storeMessage(
             $conversationId,
-            auth()->id(),
-            $request->message
+             auth()->id(),
+            $request->message,
+             $request->file('attachment')
         );
 
         return response()->json($message);

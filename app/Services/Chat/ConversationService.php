@@ -25,22 +25,23 @@ class ConversationService
     {
         $conversations = ConversationModel::with([
             'sender:id,first_name',
-            'receiver:id,first_name',
+            'receiver:id,first_name,last_name,img',
             'latestMessage:id,messages.conversation_id,message,sender_id,created_at'
         ])
             ->where('sender_id', $authUserId)
             ->orWhere('receiver_id', $authUserId)
             ->get()
             ->map(function ($conversation) {
+                   $createdAt = optional($conversation->latestMessage?->created_at);
                 return [
                     'conversationId' => $conversation->id,
                     'sender_id' => $conversation->sender_id,
                     'receiver_id' => $conversation->receiver_id,
                     'senderName' => $conversation->sender?->first_name,
-                    'receiverName' => $conversation->receiver?->first_name,
+                    'receiverName' => $conversation->receiver?->first_name . ' ' . $conversation->receiver?->last_name,
+                    'receiver_avatar' => $conversation->receiver?->img_url,
                     'lastMessage' => $conversation->latestMessage?->message,
-                    'messageSenderId' => $conversation->latestMessage?->sender_id,
-                    'messageTime' => optional($conversation->latestMessage?->created_at)->toDateTimeString(),
+                    'messageTime' => $createdAt ? $createdAt->diffForHumans() : null,
                 ];
             });
 

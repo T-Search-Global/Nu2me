@@ -31,9 +31,12 @@ class MessageSent implements ShouldBroadcast
     {
         return [
             'id' => $this->message->id,
+            'conversation_id' => $this->message->conversation_id,
             'message' => $this->message->message,
             'sender' => $this->message->sender,
-            'created_at' => $this->message->created_at->toDateTimeString(),
+            'sent_by_me' => false,
+            'attachments' => $this->message->attachments->map(fn($a) => asset('storage/' . $a->file_path)),
+            'created_at' => $this->message->created_at->diffForHumans(),
         ];
     }
 }

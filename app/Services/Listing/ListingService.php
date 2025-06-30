@@ -29,7 +29,7 @@ class ListingService
         $listingCount = $user->listings()->count();
         $chargeAmount = 0;
         // Get admin-defined charges
-        $charges = ListingCharge::first(); // Optional: use default values if null
+        $charges = ListingCharge::first(); 
 
         $featurePrice = $charges->feature_listing_amount ?? 10;
         $additionalPrice = $charges->additional_listing_amount ?? 5;

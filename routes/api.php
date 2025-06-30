@@ -50,6 +50,7 @@ Route::post('/user/update',[AuthController::class, 'updateUser']);
 Route::get('/user/edit',[AuthController::class, 'editUser']);
 
 Route::post('/pin-create', [PinController::class, 'store']);
+Route::get('/pin-show', [PinController::class, 'show']);
 
 Route::post('/conversations', [ConversationController::class, 'store']);
 Route::get('/conversations', [ConversationController::class, 'show']);

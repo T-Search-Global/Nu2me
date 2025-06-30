@@ -23,6 +23,8 @@ class PinController extends Controller
             'description' => 'required|string|max:65535',
             'category' => 'required|string',
             'location' => 'required|string',
+            'latitude' => 'required|numeric|between:-90,90',
+            'longitude' => 'required|numeric|between:-180,180',
         ]);
 
         if ($validator->fails()) {
@@ -35,5 +37,12 @@ class PinController extends Controller
             'message' => 'Pin created successfully.',
             'pin' => $pin,
         ]);
+    }
+
+
+    public function show()
+    {
+        $pin = $this->pinService->show();
+        return $pin;
     }
 }

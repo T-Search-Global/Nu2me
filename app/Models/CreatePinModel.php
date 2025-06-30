@@ -16,7 +16,9 @@ class CreatePinModel extends Model
         'description',
         'category',
         'location',
-        'user_id'
+        'user_id',
+        'latitude',
+        'longitude'
     ];
 
     public function user()

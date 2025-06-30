@@ -18,17 +18,21 @@ class PinService
             'description' => $request->description,
             'category' => $request->category,
             'location' => $request->location,
+            'latitude' => $request->latitude,
+            'longitude' => $request->longitude,
         ]);
 
         $user->createToken('auth_token')->plainTextToken;
 
-        return [
-            'message' => 'Pin created successfully',
-            'pin' => $pin,
-        ];
+        return $pin;
     }
 
 
-
-
+    public function show()
+    {
+        $pin = CreatePinModel::with('user')
+            ->select(['id', 'name', 'description', 'category', 'location', 'user_id', 'latitude', 'longitude'])
+            ->get();
+        return $pin;
+    }
 }

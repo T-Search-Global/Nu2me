@@ -26,6 +26,7 @@ class UserResource extends JsonResource
                 'img'         => $this->img,
                 'img_url'     => $this->img ? asset('storage/user/img/' . $this->img) : null,
                 'listing_count'=> $this->listings()->count(),
+                'is_paid' => $this->is_paid ? "success" : "no",
             ];
         }
     }

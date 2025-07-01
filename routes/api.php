@@ -30,39 +30,39 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
 
-Route::middleware('auth:sanctum')->group(function () {
-Route::post('/user-update', [UserController::class, 'profile']);
-Route::post ('/delete-account', [UserController::class, 'deleteAccount']);
-Route::post('/listing-create', [ListingController::class, 'store']);
+Route::middleware('auth:sanctum')->post('/user/mark-paid', [AuthController::class, 'markAsPaid']);
+Route::middleware('auth:sanctum','paid')->group(function () {
 
-Route::get('/listing', [ListingController::class, 'getListing']);
+    Route::post('/user-update', [UserController::class, 'profile']);
+    Route::post('/delete-account', [UserController::class, 'deleteAccount']);
+    Route::post('/listing-create', [ListingController::class, 'store']);
 
-Route::get('/listing-edit/{id}', action: [ListingController::class, 'edit']);
-Route::post('/listing-update/{id}', [ListingController::class, 'update']);
-Route::post('/listing-delete/{id}', [ListingController::class, 'destroy']);
+    Route::get('/listing', [ListingController::class, 'getListing']);
 
-Route::get('/listing-detail/{id}',  [ListingController::class, 'getListingDetail']);
-Route::get('/listing-search',  [ListingController::class, 'listingSearch']);
+    Route::get('/listing-edit/{id}', action: [ListingController::class, 'edit']);
+    Route::post('/listing-update/{id}', [ListingController::class, 'update']);
+    Route::post('/listing-delete/{id}', [ListingController::class, 'destroy']);
 
-Route::post('/rating-create',  [ListingController::class, 'storeRating']);
+    Route::get('/listing-detail/{id}',  [ListingController::class, 'getListingDetail']);
+    Route::get('/listing-search',  [ListingController::class, 'listingSearch']);
 
-Route::post('/user/update',[AuthController::class, 'updateUser']);
-Route::get('/user/edit',[AuthController::class, 'editUser']);
+    Route::post('/rating-create',  [ListingController::class, 'storeRating']);
 
-Route::post('/pin-create', [PinController::class, 'store']);
-Route::get('/pin-show', [PinController::class, 'show']);
+    Route::post('/user/update', [AuthController::class, 'updateUser']);
+    Route::get('/user/edit', [AuthController::class, 'editUser']);
 
-Route::post('/conversations', [ConversationController::class, 'store']);
-Route::get('/conversations', [ConversationController::class, 'show']);
+    Route::post('/pin-create', [PinController::class, 'store']);
+    Route::get('/pin-show', [PinController::class, 'show']);
 
-Route::post('/conversations/{id}/messages', [MessageController::class, 'store']);
+    Route::post('/conversations', [ConversationController::class, 'store']);
+    Route::get('/conversations', [ConversationController::class, 'show']);
 
-Route::get('/conversations/{id}/messages', [MessageController::class, 'show']);
+    Route::post('/conversations/{id}/messages', [MessageController::class, 'store']);
+
+    Route::get('/conversations/{id}/messages', [MessageController::class, 'show']);
 
 
-Route::get('/events/show', [EventController::class, 'events'])->name('events');
-
-
+    Route::get('/events/show', [EventController::class, 'events'])->name('events');
 });
 
 // Auth

@@ -31,6 +31,7 @@ class User extends Authenticatable
         'password',
         'facebook_id',
         'google_id',
+        'is_paid',
     ];
 
     /**

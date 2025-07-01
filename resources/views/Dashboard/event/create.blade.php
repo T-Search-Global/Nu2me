@@ -41,33 +41,48 @@
                                 <th>#</th>
                                 <th>Event</th>
                                 <th>Image</th>
+                                <th>User Name</th>
+                                <th>User Email</th>
+                                <th>Paid</th>
+                                <th>Approve</th>
                                 <th>Date</th>
                                 <th>Actions</th>
                             </tr>
                         </thead>
                         <tbody>
                             @foreach ($events as $key => $event)
-                            <tr>
-                                <td>{{ $key + 1 ?? ''}}</td>
-                                <td>{{ $event->name ?? '' }}</td>
+                                <tr>
+                                    <td>{{ $key + 1 ?? '' }}</td>
+                                    <td>{{ $event->name ?? '' }}</td>
 
-                                <td>
-                                    @if ($event->image)
-                                        <img src=" {{ asset('storage/' . $event->image) }}" alt="" width="40" height="40">
-                                    @endif
+                                    <td>
+                                        @if ($event->image)
+                                            <img src=" {{ asset('storage/' . $event->image) }}" alt=""
+                                                width="40" height="40">
+                                        @endif
 
-                                </td>
-                                <td>{{ $event->created_at ?? ''}}</td>
+                                    </td>
+                                    <td>{{ $event->user->first_name ?? '' }}</td>
+                                    <td>{{ $event->user->email ?? '' }}</td>
+                                    <td>{{ $event->is_event_paid ? 'paid' : 'not paid' }}</td>
+                                    <td>{{ $event->approve ? 'yes' : 'no' }}</td>
+                                    <td>{{ $event->created_at ?? '' }}</td>
 
 
-                                <td>
-                                    <form action="{{ route('admin.events.destroy', $event->id ?? '') }}" method="POST"
-                                        onsubmit="return confirm('Are you sure you want to delete this?');">
-                                        @csrf
-                                        @method('DELETE')
-                                        <button type="submit" class="btn btn-danger btn-sm">Delete</button>
-                                    </form>
-                                </td>
+                                    <td>
+                                        @if (!$event->approve)
+                                            <!-- Approve Button -->
+                                            <button class="btn btn-primary btn-sm" data-bs-toggle="modal"
+                                                data-bs-target="#approveModal"
+                                                onclick="setApproveEventId({{ $event->id }})">
+                                                Approve
+                                            </button>
+                                        @else
+                                            <span class="badge bg-success">Approved</span>
+                                        @endif
+                                    </td>
+
+
 
 
                                 </tr>
@@ -133,6 +148,32 @@
 
 
 
+
+
+    {{-- create event --}}
+    <!-- Approve Modal -->
+    <div class="modal fade" id="approveModal" tabindex="-1" aria-labelledby="approveModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <form method="POST" action="" id="approveForm">
+                @csrf
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">Approve Event</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        Are you sure you want to approve this event?
+                    </div>
+                    <div class="modal-footer">
+                        <button type="submit" class="btn btn-success">Yes, Approve</button>
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+
+
 @section('scripts')
     <script>
         $(document).ready(function() {
@@ -165,6 +206,12 @@
             document.getElementById('charge_id').value = id;
             document.getElementById('feature_charge').value = feature;
             document.getElementById('additional_charge').value = additional;
+        }
+
+
+        function setApproveEventId(id) {
+            const form = document.getElementById('approveForm');
+            form.action = `/events/approve/${id}`; // adjust path if route is prefixed
         }
     </script>
 @endsection

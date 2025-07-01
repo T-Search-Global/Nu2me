@@ -62,7 +62,10 @@ Route::middleware('auth:sanctum','paid')->group(function () {
     Route::get('/conversations/{id}/messages', [MessageController::class, 'show']);
 
 
+
     Route::get('/events/show', [EventController::class, 'events'])->name('events');
+    Route::post('/events/create', [EventController::class, 'eventCreate']);
+    Route::post('/events/mark-paid/{id}', [EventController::class, 'markEventPaid']);
 });
 
 // Auth

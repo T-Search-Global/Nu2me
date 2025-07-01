@@ -2,41 +2,138 @@
 
 namespace App\Http\Controllers\Admin;
 
-use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
 use App\Models\Event;
-use Illuminate\Support\Facades\Storage;
-use Illuminate\Support\Facades\Http;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
+use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Http;
+use Illuminate\Auth\Events\Validated;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Validator;
 
 class EventController extends Controller
 {
     public function index()
     {
-        $events = Event::latest()->get();
+        $events = Event::with('user')->get();
         return view('Dashboard.event.create', compact('events'));
     }
 
 
-    public function store(Request $request)
+    // public function store(Request $request)
+    // {
+    //     $validator = Validator::make($request->all(), [
+    //         'name' => 'required|string|max:255',
+    //         'user_id' => 'required|exists:users,id',
+    //         'image' => 'nullable|image|max:8048',
+    //     ]);
+
+
+    //     if ($validator->fails()) {
+    //         return response()->json(['errors' => $validator->errors()], 422);
+    //     }
+    //     $imagePath = null;
+    //     if ($request->hasFile('image')) {
+    //         $image = $request->file('image'); // this is not an array
+    //         $imagePath = $image->store('admin', 'public');
+    //     }
+
+    //     $event = Event::create([
+    //         'name' => $request->name,
+    //         'image' => $imagePath,
+    //     ]);
+
+    //     // ✅ Send Push Notification to All via OneSignal
+    //     $response = Http::withHeaders([
+    //         'Authorization' => 'Basic ' . config('onesignal.rest_api_key'),
+    //         'Accept' => 'application/json',
+    //         'Content-Type' => 'application/json',
+    //     ])->post('https://onesignal.com/api/v1/notifications', [
+    //         'app_id' => config('onesignal.app_id'),
+    //         'included_segments' => ['All'],
+    //         'headings' => ['en' => 'New Event'],
+    //         'contents' => ['en' => $event->name],
+    //         'data' => [
+    //             'type' => 'event',
+    //             'event_id' => $event->id
+    //         ],
+    //     ]);
+
+    //     Log::info('OneSignal Event Push:', [$response->json()]);
+
+    //     return redirect()->route('admin.events.index')->with('success', 'Event created and notification sent.');
+    // }
+
+
+
+    public function approve(Request $request, $id)
     {
-        $request->validate([
+        $event = Event::findOrFail($id);
+        $event->approve = true;
+        $event->save();
+
+        return redirect()->back()->with('success', 'Event approved successfully.');
+    }
+
+    // public function destroy($id)
+    // {
+    //     $event = Event::findOrFail($id);
+    //     if (!$event) {
+    //         return redirect()->back()->with('error', 'Event Not Find');
+    //     }
+    //     $event->delete();
+    //     return redirect()->back()->with('success', 'Event Deleted Successfully');
+    // }
+
+
+
+    // for user  events
+    public function events()
+    {
+        $events = Event::where('is_event_paid', 1)
+            ->where('approve', 1)
+            ->get()
+            ->map(function ($event) {
+                return [
+                    'id' => $event->id,
+                    'image' => $event->image ? asset('storage/' . $event->image) : null,
+                    'approve' => $event->approve,
+                    'is_event_paid' => $event->is_event_paid,
+                    'date' => $event->date ?? null, // example extra field
+                ];
+            });
+
+        return response()->json($events);
+    }
+
+
+
+    public function eventCreate(Request $request)
+    {
+
+        $validator = Validator::make($request->all(), [
             'name' => 'required|string|max:255',
+            'user_id' => 'required|exists:users,id',
             'image' => 'nullable|image|max:8048',
         ]);
-
+        if ($validator->fails()) {
+            return response()->json(['errors' => $validator->errors()], 422);
+        }
         $imagePath = null;
         if ($request->hasFile('image')) {
-            $image = $request->file('image'); // this is not an array
-            $imagePath = $image->store('admin', 'public');
+            $image = $request->file('image');
+            $imagePath = $image->store('user', 'public');
         }
 
         $event = Event::create([
             'name' => $request->name,
             'image' => $imagePath,
+            'user_id' => $request->user_id,
+            'is_event_paid' => false,
+            'approve' => false,
         ]);
 
-        // ✅ Send Push Notification to All via OneSignal
+        // Push Notification via OneSignal
         $response = Http::withHeaders([
             'Authorization' => 'Basic ' . config('onesignal.rest_api_key'),
             'Accept' => 'application/json',
@@ -48,40 +145,25 @@ class EventController extends Controller
             'contents' => ['en' => $event->name],
             'data' => [
                 'type' => 'event',
-                'event_id' => $event->id
+                'event_id' => $event->id,
             ],
         ]);
 
         Log::info('OneSignal Event Push:', [$response->json()]);
-
-        return redirect()->route('admin.events.index')->with('success', 'Event created and notification sent.');
+        return response()->json($event);
     }
 
 
-    public function destroy($id)
+    public function markEventPaid($id)
     {
         $event = Event::findOrFail($id);
-        if (!$event) {
-            return redirect()->back()->with('error', 'Event Not Find');
-        }
-        $event->delete();
-        return redirect()->back()->with('success', 'Event Deleted Successfully');
-    }
 
+        $event->is_event_paid = true;
+        $event->save();
 
-
-    // for user shwo events
-    public function events(){
-
-     $events = Event::all()->map(function ($event) {
-        return [
-            'id' => $event->id,
-            // 'name' => $event->name,
-            'image' => $event->image ? asset('storage/' . $event->image) : null,
-        ];
-    });
-
-    return response()->json($events);
-
+        return response()->json([
+            'message' => 'Event Approved Successfully',
+            'event' => $event,
+        ]);
     }
 }

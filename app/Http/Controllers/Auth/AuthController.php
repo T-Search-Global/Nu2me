@@ -26,8 +26,9 @@ class AuthController extends Controller
     public function markAsPaid(Request $request)
     {
         $request->validate([
-            'payment_status' => 'required|in:success',
+            'payment_status' => 'required|boolean',
         ]);
+
 
         $user = auth()->user();
 

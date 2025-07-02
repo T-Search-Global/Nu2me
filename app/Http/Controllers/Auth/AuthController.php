@@ -23,24 +23,31 @@ class AuthController extends Controller
         $this->authService = $authService;
     }
 
-    public function markAsPaid(Request $request)
-    {
-        $request->validate([
-            'payment_status' => 'required|boolean',
-        ]);
-
-
-        $user = auth()->user();
-
-        $user->is_paid = true;
-        $user->save();
-
+   public function markAsPaid(Request $request)
+   {
+    $user = auth()->user();
+    $request->validate([
+        'payment_status' => 'required|boolean',
+    ]);
+    if (!$request->payment_status) {
         return response()->json([
-            'message' => 'User marked as paid successfully.',
-            'is_paid' => $user->is_paid,
+            'message' => 'Payment status invalid. User not marked as paid.',
+            'is_paid' => false,
             'userDetails' => new UserResource($user),
-        ]);
+        ], 400);
     }
+
+
+    $user->is_paid = true;
+    $user->save();
+
+    return response()->json([
+        'message' => 'User marked as paid successfully.',
+        'is_paid' => $user->is_paid,
+        'userDetails' => new UserResource($user),
+    ]);
+}
+
 
 
     public function register(Request $request)

@@ -42,7 +42,7 @@ Route::middleware('auth')->group(function () {
 
 
   Route::get('events', [EventController::class, 'index'])->name('admin.events.index');
-    // Route::post('events', [EventController::class, 'store'])->name('admin.events.store');
+    Route::post('events', [EventController::class, 'store'])->name('admin.events.store');
     // Route::delete('events/destroy/{id}', [EventController::class, 'destroy'])->name('admin.events.destroy');
     Route::get('events/edit/{id}', [EventController::class, 'edit'])->name('admin.events.edit');
     Route::post('/events/approve/{id}', [EventController::class, 'approve'])->name('approve');

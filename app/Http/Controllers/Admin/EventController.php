@@ -154,16 +154,25 @@ class EventController extends Controller
     }
 
 
-    public function markEventPaid($id)
-    {
-        $event = Event::findOrFail($id);
+   public function markEventPaid(Request $request, $id)
+{
+    $user = auth()->user();
 
-        $event->is_event_paid = true;
-        $event->save();
+    $event = Event::where('id', $id)->where('user_id', $user->id)->first();
 
+    if (!$event) {
         return response()->json([
-            'message' => 'Event Approved Successfully',
-            'event' => $event,
-        ]);
+            'message' => 'Event not found or unauthorized.'
+        ], 404);
     }
+
+    $event->is_event_paid = true;
+    $event->save();
+
+    return response()->json([
+        'message' => 'Event marked as paid successfully.',
+        'event' => $event,
+    ]);
+}
+
 }

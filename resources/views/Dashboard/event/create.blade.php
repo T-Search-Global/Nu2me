@@ -1,7 +1,7 @@
 @extends('Dashboard.Layouts.master_dashboard')
 
 @section('heading')
-    Create Events
+    Events
 @endsection
 <style>
     .dashboard-main .left-panel .left-panel-menu ul li a.event-active {
@@ -28,12 +28,12 @@
                         </div>
                     @endif
                     <!-- Announcement Modal Trigger Button -->
-                    <div class="mt-4">
+                    {{-- <div class="mt-4">
                         <button type="button" class="btn btn-success" data-bs-toggle="modal"
                             data-bs-target="#createAnnouncementModal">
                             Create Events
                         </button>
-                    </div>
+                    </div> --}}
 
                     <table class="table table-bordered table-hover" id="ChargeTable">
                         <thead class="thead-dark">

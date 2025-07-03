@@ -29,7 +29,7 @@ class ListingService
         $listingCount = $user->listings()->count();
         $chargeAmount = 0;
         // Get admin-defined charges
-        $charges = ListingCharge::first(); 
+        $charges = ListingCharge::first();
 
         $featurePrice = $charges->feature_listing_amount ?? 10;
         $additionalPrice = $charges->additional_listing_amount ?? 5;
@@ -108,8 +108,10 @@ class ListingService
         }
 
 
-        // $paymentCount->listing_id = $listing->id;
-        // $paymentCount->save();
+            // $paymentCount->listing_id = $listing->id;
+            // $paymentCount->save();
+
+
 
         if (isset($paymentCount)) {
             $paymentCount->listing_id = $listing->id;

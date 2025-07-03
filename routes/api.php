@@ -28,11 +28,11 @@ use App\Http\Controllers\Auth\SocialiteController;
 */
 
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
-   return new UserResource($request->user());
+    return new UserResource($request->user());
 });
 
 Route::middleware('auth:sanctum')->post('/user/mark-paid', [AuthController::class, 'markAsPaid']);
-Route::middleware('auth:sanctum','paid')->group(function () {
+Route::middleware('auth:sanctum', 'paid')->group(function () {
 
     Route::post('/user-update', [UserController::class, 'profile']);
     Route::post('/delete-account', [UserController::class, 'deleteAccount']);
@@ -46,6 +46,7 @@ Route::middleware('auth:sanctum','paid')->group(function () {
 
     Route::get('/listing-detail/{id}',  [ListingController::class, 'getListingDetail']);
     Route::get('/listing-search',  [ListingController::class, 'listingSearch']);
+    Route::post('/listing/mark-featured', [ListingController::class, 'markAsFeatured']);
 
     Route::post('/rating-create',  [ListingController::class, 'storeRating']);
 

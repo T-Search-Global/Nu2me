@@ -25,6 +25,7 @@ class ListingModel extends Model
         'dimensions',
         'sold',
     ];
+    protected $appends = ['is_expire'];
 
     protected $hidden = [
         'created_at',
@@ -36,7 +37,8 @@ class ListingModel extends Model
     protected $casts = [
         'img' => 'array',
         'expired_at' => 'datetime',
-           'expiry_date' => 'datetime',
+        'expiry_date' => 'datetime',
+        'is_expire' => 'datetime',
     ];
 
 
@@ -54,6 +56,16 @@ class ListingModel extends Model
 
     public function ratings()
     {
-        return $this->hasMany(RatingModel::class,'listing_id');
+        return $this->hasMany(RatingModel::class, 'listing_id');
+    }
+
+
+    public function getIsExpireAttribute()
+    {
+        if ($this->expired_at != null) {
+            return 1;
+        } else {
+            return 0;
+        }
     }
 }

@@ -161,11 +161,24 @@ class ListingService
     public function myExpiredListings()
     {
         $user = Auth::user();
-        $expiredListings =  ListingModel::where('user_id', $user->id)
+        $listings =  ListingModel::with(['images'])
+            ->withAvg('ratings', 'rating')->where('user_id', $user->id)
             ->whereNotNull('expired_at')
             ->orderBy('expired_at', 'desc')
             ->get();
-        return $expiredListings;
+
+        $listings = $listings->map(function ($listing) {
+            // Convert to string using number_format or (string) casting
+            $average = round($listing->ratings_avg_rating ?? 0, 1);
+            $listing->average_rating = $average == 0 ? "0" : number_format($average, 1);
+
+            unset($listing->ratings_avg_rating);
+            unset($listing->ratings);
+
+            return $listing;
+        });
+
+        return $listings;
     }
 
 

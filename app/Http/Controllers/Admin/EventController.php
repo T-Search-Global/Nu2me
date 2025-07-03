@@ -90,7 +90,7 @@ class EventController extends Controller
     // for user  events
     public function events()
     {
-        $events = Event::where('is_event_paid', 1)
+        $events = Event::where('is_event_paid', 0)
             ->where('approve', 1)
             ->get()
             ->map(function ($event) {

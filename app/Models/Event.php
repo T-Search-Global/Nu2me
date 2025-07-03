@@ -10,15 +10,23 @@ class Event extends Model
     use HasFactory;
 
     protected $table = "events";
-    protected $fillable = ['name', 'image','approve','user_id','is_event_paid'];
+
+    protected $appends = ['url'];
+
+
+    protected $fillable = ['name', 'image', 'approve', 'user_id', 'is_event_paid'];
 
     protected $hidden = [
         'created_at',
         'updated_at',
+        'image',
     ];
-
-    public function user(){
+    public function getUrlAttribute()
+    {
+        return asset('storage/' . $this->image);
+    }
+    public function user()
+    {
         return $this->belongsTo(User::class);
     }
-
 }

@@ -35,7 +35,10 @@ class ListingModel extends Model
 
     protected $casts = [
         'img' => 'array',
+        'expired_at' => 'datetime',
+           'expiry_date' => 'datetime',
     ];
+
 
     public $timestamps = false;
 

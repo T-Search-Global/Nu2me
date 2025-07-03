@@ -10,6 +10,7 @@ use App\Models\ListingModel;
 use App\Models\PaymentModel;
 use Illuminate\Http\Request;
 use App\Models\ListingCharge;
+use Illuminate\Support\Carbon;
 use App\Models\ListingImageModel;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Auth;
@@ -83,6 +84,8 @@ class ListingService
 
         if ($request->feature_check == 1) {
             $expiryDate = $setExpiryDate;
+        } else {
+            $expiryDate = Carbon::now()->addMonth();
         }
 
         // Proceed with creating listing
@@ -108,8 +111,8 @@ class ListingService
         }
 
 
-            // $paymentCount->listing_id = $listing->id;
-            // $paymentCount->save();
+        // $paymentCount->listing_id = $listing->id;
+        // $paymentCount->save();
 
 
 
@@ -138,7 +141,7 @@ class ListingService
     public function getListing()
     {
         $listings = ListingModel::with(['images'])
-            ->withAvg('ratings', 'rating')
+            ->withAvg('ratings', 'rating')->where('expired_at', null)->orderByDesc('id')
             ->get();
 
         $listings = $listings->map(function ($listing) {
@@ -155,8 +158,60 @@ class ListingService
         return $listings;
     }
 
+   public function myExpiredListings()
+{
+    $user = Auth::user();
+
+    $expiredListings = ListingModel::with(['images', 'user'])
+        ->withAvg('ratings', 'rating')
+        ->where('user_id', $user->id)
+        ->whereNotNull('expired_at')
+        ->orderBy('expired_at', 'desc')
+        ->get();
+
+    // Calculate average rating and clean response
+    $expiredListings->transform(function ($listing) {
+        $average = round($listing->ratings_avg_rating ?? 0, 1);
+        $listing->average_rating = $average == 0 ? "0" : number_format($average, 1);
+
+        unset($listing->ratings_avg_rating);
+        unset($listing->ratings); // in case eager-loaded
+
+        return $listing;
+    });
 
 
+        return $expiredListings;
+
+}
+
+
+
+
+    public function relist($listingId, $userId)
+    {
+        $listing = ListingModel::where('id', $listingId)
+            ->where('user_id', $userId)
+            ->first();
+
+        if (!$listing) {
+            return [
+                'status' => false,
+                'message' => 'Listing not found or unauthorized.',
+                'listing' => null
+            ];
+        }
+
+        $listing->expiry_date = Carbon::now()->addMonth(); // +1 month
+        $listing->expired_at = null;
+        $listing->save();
+
+        return [
+            'status' => true,
+            'message' => 'Listing relisted successfully.',
+            'listing' => $listing
+        ];
+    }
 
     public function listingDetail($id)
     {

@@ -6,6 +6,7 @@ use App\Models\ListingModel;
 use Illuminate\Http\Request;
 use App\Models\ListingCharge;
 use App\Http\Resources\UserResource;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Http;
 use App\Services\Listing\ListingService;
 use Illuminate\Support\Facades\Validator;
@@ -59,6 +60,42 @@ class ListingController extends Controller
             'listings' => $listings,
         ]);
     }
+
+
+
+   public function myExpiredListings()
+{
+    $expiredListings = $this->listingService->myExpiredListings();
+
+    return response()->json([
+        'status' => 'true',
+        'listings' => $expiredListings
+    ]);
+}
+
+
+public function relist(Request $request)
+{
+    $request->validate([
+        'listing_id' => 'required|exists:listings,id',
+    ]);
+
+    $result =  $this->listingService->relist($request->listing_id, auth()->id());
+
+    if (!$result['status']) {
+        return response()->json([
+            'status' => false,
+            'message' => $result['message']
+        ], 404);
+    }
+
+    return response()->json([
+        'status' => true,
+        'message' => $result['message'],
+        'listing' => $result['listing']
+    ]);
+}
+
 
     public function getListingDetail($id)
     {
@@ -210,7 +247,7 @@ class ListingController extends Controller
         return response()->json($listings);
     }
 
-// usign in app purchase listing maeke it feature
+    // usign in app purchase listing maeke it feature
     public function markAsFeatured(Request $request)
     {
         $request->validate([

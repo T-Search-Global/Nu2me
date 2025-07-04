@@ -40,6 +40,7 @@
                             <tr>
                                 <th>#</th>
                                 <th>Event</th>
+                                {{-- <th>Description</th> --}}
                                 <th>Image</th>
                                 <th>User Name</th>
                                 <th>User Email</th>
@@ -54,6 +55,7 @@
                                 <tr>
                                     <td>{{ $key + 1 ?? '' }}</td>
                                     <td>{{ $event->name ?? '' }}</td>
+                                    {{-- <td>{{ $event->description ?? '' }}</td> --}}
 
                                     <td>
                                         @if ($event->image)

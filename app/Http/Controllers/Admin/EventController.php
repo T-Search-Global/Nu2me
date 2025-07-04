@@ -96,6 +96,8 @@ class EventController extends Controller
             ->map(function ($event) {
                 return [
                     'id' => $event->id,
+                    'name' => $event->name,
+                    'description' => $event->description,
                     'image' => $event->image ? asset('storage/' . $event->image) : null,
                     'approve' => $event->approve,
                     'is_event_paid' => $event->is_event_paid,
@@ -115,6 +117,7 @@ class EventController extends Controller
             'name' => 'required|string|max:255',
             'user_id' => 'required|exists:users,id',
             'image' => 'nullable|image|max:8048',
+            'description' => 'nullable|string',
         ]);
         if ($validator->fails()) {
             return response()->json(['errors' => $validator->errors()], 422);
@@ -128,6 +131,7 @@ class EventController extends Controller
         $event = Event::create([
             'name' => $request->name,
             'image' => $imagePath,
+            'description' =>$request->description ,
             'user_id' => $request->user_id,
             'is_event_paid' => false,
             'approve' => false,

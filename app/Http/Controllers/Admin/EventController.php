@@ -96,7 +96,7 @@ class EventController extends Controller
             ->map(function ($event) {
                 return [
                     'id' => $event->id,
-                    'name' => $event->name,
+                    'event_name' => $event->name,
                     'description' => $event->description,
                     'image' => $event->image ? asset('storage/' . $event->image) : null,
                     'approve' => $event->approve,

@@ -124,6 +124,7 @@ class EventController extends Controller
             'user_id' => 'required|exists:users,id',
             'image' => 'nullable|image|max:8048',
             'description' => 'nullable|string',
+            'date' => 'nullable|date|after:today',
         ]);
         if ($validator->fails()) {
             return response()->json(['errors' => $validator->errors()], 422);
@@ -137,6 +138,7 @@ class EventController extends Controller
         $event = Event::create([
             'name' => $request->name,
             'image' => $imagePath,
+            'date' => $request->date,
             'description' => $request->description,
             'user_id' => $request->user_id,
             'is_event_paid' => false,

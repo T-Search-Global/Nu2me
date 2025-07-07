@@ -14,7 +14,7 @@ class Event extends Model
     protected $appends = ['url'];
 
 
-    protected $fillable = ['name','description', 'image', 'approve', 'user_id', 'is_event_paid'];
+    protected $fillable = ['name','date','description', 'image', 'approve', 'user_id', 'is_event_paid'];
 
     protected $hidden = [
         'created_at',

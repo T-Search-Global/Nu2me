@@ -8,6 +8,7 @@ use Illuminate\Http\Request;
 use App\Models\ConversationModel;
 use App\Models\MessageAttachment;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Http;
 
 class MessageService
 {
@@ -31,10 +32,34 @@ class MessageService
             }
         }
 
+        $msg->load('attachments', 'conversation');
+        $conversation = $msg->conversation;
 
+        $receiverId = $conversation->receiver_id;
+
+        if ($receiverId && $receiverId != $senderId) {
+            Http::withHeaders([
+                'Authorization' => 'Basic ' . config('onesignal.rest_api_key'),
+                'Accept' => 'application/json',
+                'Content-Type' => 'application/json',
+            ])->post('https://onesignal.com/api/v1/notifications', [
+                'app_id' => config('onesignal.app_id'),
+                'include_external_user_ids' => [(string) $receiverId], // string required by OneSignal
+                'headings' => ['en' => 'New Message'],
+                'contents' => ['en' => $message ?? '📎 You received an attachment'],
+                'data' => [
+                    'type' => 'chat',
+                    'conversation_id' => $conversationId,
+                    'sender_id' => $senderId,
+                ],
+            ]);
+        }
+
+        // 🔄 Broadcast real-time event
+        broadcast(new MessageSent($msg))->toOthers();
 
         // Fire real-time event
-        broadcast(new MessageSent($msg->load('attachments')))->toOthers();
+        // broadcast(new MessageSent($msg->load('attachments')))->toOthers();
 
         return [
             'id' => $msg->id,

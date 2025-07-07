@@ -90,8 +90,9 @@ class EventController extends Controller
     // for user  events
     public function events()
     {
-        $events = Event::where('is_event_paid', 0)
-            ->where('approve', 1)
+        $events = Event::where('is_event_paid', 0) // unpaid
+            ->where('approve', 1) // approved
+            ->with('user')        // eager load user if needed
             ->get()
             ->map(function ($event) {
                 return [
@@ -99,9 +100,14 @@ class EventController extends Controller
                     'event_name' => $event->name,
                     'description' => $event->description,
                     'image' => $event->image ? asset('storage/' . $event->image) : null,
-                    'approve' => $event->approve,
-                    'is_event_paid' => $event->is_event_paid,
-                    'date' => $event->date ?? null, // example extra field
+                    'approve' => (bool) $event->approve,
+                    'is_event_paid' => (bool) $event->is_event_paid,
+                    'date' => $event->date ?? null,
+                    'user' => [
+                        'id' => $event->user->id ?? null,
+                        'name' => $event->user->first_name ?? null,
+                        'email' => $event->user->email ?? null,
+                    ],
                 ];
             });
 
@@ -131,7 +137,7 @@ class EventController extends Controller
         $event = Event::create([
             'name' => $request->name,
             'image' => $imagePath,
-            'description' =>$request->description ,
+            'description' => $request->description,
             'user_id' => $request->user_id,
             'is_event_paid' => false,
             'approve' => false,
@@ -158,25 +164,24 @@ class EventController extends Controller
     }
 
 
-   public function markEventPaid(Request $request, $id)
-{
-    $user = auth()->user();
+    public function markEventPaid(Request $request, $id)
+    {
+        $user = auth()->user();
 
-    $event = Event::where('id', $id)->where('user_id', $user->id)->first();
+        $event = Event::where('id', $id)->where('user_id', $user->id)->first();
 
-    if (!$event) {
+        if (!$event) {
+            return response()->json([
+                'message' => 'Event not found or unauthorized.'
+            ], 404);
+        }
+
+        $event->is_event_paid = true;
+        $event->save();
+
         return response()->json([
-            'message' => 'Event not found or unauthorized.'
-        ], 404);
+            'message' => 'Event marked as paid successfully.',
+            'event' => $event,
+        ]);
     }
-
-    $event->is_event_paid = true;
-    $event->save();
-
-    return response()->json([
-        'message' => 'Event marked as paid successfully.',
-        'event' => $event,
-    ]);
-}
-
 }

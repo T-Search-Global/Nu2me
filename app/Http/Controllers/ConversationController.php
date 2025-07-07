@@ -20,7 +20,7 @@ class ConversationController extends Controller
     {
         $request->validate([
             'receiver_id' => 'required|exists:users,id',
-            'listing_id' => 'required|exists:listings,id',
+            'listing_id' => 'nullable',
         ]);
 
         $conversation = $this->conversationService->createOrGetConversation(

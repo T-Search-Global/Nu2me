@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Admin;
 
+use Carbon\Carbon;
 use App\Models\Event;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
@@ -90,9 +91,9 @@ class EventController extends Controller
     // for user  events
     public function events()
     {
-        $events = Event::where('is_event_paid', 0) // unpaid
+        $events = Event::where('expired_at','=', null)
             ->where('approve', 1) // approved
-            ->with('user')        // eager load user if needed
+            ->with('user')->orderByDesc('id')        // eager load user if needed
             ->get()
             ->map(function ($event) {
                 return [
@@ -143,6 +144,7 @@ class EventController extends Controller
             'user_id' => $request->user_id,
             'is_event_paid' => false,
             'approve' => false,
+            'expired_at' => null,
         ]);
 
         // Push Notification via OneSignal

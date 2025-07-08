@@ -14,6 +14,8 @@ class Kernel extends ConsoleKernel
     {
         // $schedule->command('inspire')->hourly();
         $schedule->command('app:reset-expired-featured-listings')->daily();
+        // for events flyer expire
+        $schedule->command('app:expire-events')->daily();
     }
 
     /**

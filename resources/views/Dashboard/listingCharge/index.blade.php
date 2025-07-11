@@ -50,9 +50,10 @@
                                 <td>
                                     <button type="button" class="btn btn-sm btn-primary" data-bs-toggle="modal"
                                         data-bs-target="#editChargeModal"
-                                        onclick="fillChargeModal({{ $charge->id }}, {{ $charge->feature_listing_amount }}, {{ $charge->additional_listing_amount }})">
+                                        onclick="fillChargeModal('{{ $charge->id ?? '' }}', '{{ $charge->feature_listing_amount ?? '' }}', '{{ $charge->additional_listing_amount ?? '' }}')">
                                         Edit
                                     </button>
+
 
                                 </td>
                             </tr>

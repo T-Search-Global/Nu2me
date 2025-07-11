@@ -43,8 +43,10 @@
                                 <td>{{ $charge->feature_listing_amount ?? 'N/A' }}</td>
                                 <td>{{ $charge->additional_listing_amount ?? 'N/A' }}</td>
 
-                                <td>{{ $charge->created_at ? $charge->created_at->format('d M Y, h:i A') : 'N/A' }}
+                                <td>
+                                    {{ optional($charge)->created_at ? optional($charge->created_at)->format('d M Y, h:i A') : 'N/A' }}
                                 </td>
+
                                 <td>
                                     <button type="button" class="btn btn-sm btn-primary" data-bs-toggle="modal"
                                         data-bs-target="#editChargeModal"

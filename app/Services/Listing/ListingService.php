@@ -22,8 +22,8 @@ class ListingService
 {
     public function store(Request $request)
     {
-        $user = Auth::user();
 
+        $user = Auth::user();
         $setDays = 7;
         $setExpiryDate = now()->addDays($setDays)->format('Y-m-d');
 
@@ -98,7 +98,7 @@ class ListingService
             'price' => $request->price,
             'location' => $request->location,
             'dimensions' => $request->dimensions,
-            'feature_check' => $request->feature_check ?? 0,
+            'feature_check' => is_numeric($request->feature_check) && (int)$request->feature_check === 0 ? 0 : $request->feature_check,
             'expiry_date' => $expiryDate,
             'sold' => $request->sold ?? 'no',
         ]);
@@ -149,7 +149,8 @@ class ListingService
             // Convert to string using number_format or (string) casting
             $average = round($listing->ratings_avg_rating ?? 0, 1);
             $listing->average_rating = $average == 0 ? "0" : number_format($average, 1);
-
+            // Convert feature_check to integer (0 or 1)
+            $listing->feature_check = (int)($listing->feature_check ?? 0);
             unset($listing->ratings_avg_rating);
             unset($listing->ratings);
 

@@ -13,7 +13,7 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 
 class User extends Authenticatable
 {
-    use HasApiTokens, HasFactory, Notifiable,SoftDeletes;
+    use HasApiTokens, HasFactory, Notifiable, SoftDeletes;
 
     /**
      * The attributes that are mass assignable.
@@ -69,10 +69,26 @@ class User extends Authenticatable
     }
 
 
-    protected $appends = ['img_url'];
+    protected $appends = ['img_url', 'vouch_received_count'];
 
     public function getImgUrlAttribute()
     {
         return $this->img ? asset('storage/user/img/' . $this->img) : null;
+    }
+    public function vouchesReceived()
+    {
+        return $this->hasManyThrough(
+            ListingVouch::class,
+            ListingModel::class,
+            'user_id',
+            'listing_id',
+            'id',
+            'id'
+        );
+    }
+
+    public function getVouchReceivedCountAttribute()
+    {
+        return $this->vouchesReceived()->count();
     }
 }

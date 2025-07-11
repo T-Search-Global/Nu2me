@@ -47,6 +47,7 @@ Route::middleware('auth:sanctum', 'paid')->group(function () {
     Route::get('/listing-detail/{id}',  [ListingController::class, 'getListingDetail']);
     Route::get('/listing-search',  [ListingController::class, 'listingSearch']);
     Route::post('/listing/mark-featured', [ListingController::class, 'markAsFeatured']);
+    Route::post('/listing/vouch', [ListingController::class, 'vouch']);
     Route::get('/my-expired-listings', [ListingController::class, 'myExpiredListings']);
     Route::post('/listing/relist', [ListingController::class, 'relist']);
 

@@ -7,6 +7,7 @@ use Stripe\Stripe;
 use App\Jobs\ListingJob;
 use App\Models\RatingModel;
 use App\Models\ListingModel;
+use App\Models\ListingVouch;
 use App\Models\PaymentModel;
 use Illuminate\Http\Request;
 use App\Models\ListingCharge;
@@ -380,5 +381,41 @@ class ListingService
         }
 
         return $query->orderBy('id', 'desc')->get();
+    }
+
+
+
+    public function vouch(Request $request)
+    {
+        $userId = Auth::id();
+        $listingId = $request->listing_id;
+
+        // Check if already vouched
+        $already = ListingVouch::where('user_id', $userId)
+            ->where('listing_id', $listingId)
+            ->exists();
+
+        if ($already) {
+            return response()->json([
+                'status' => false,
+                'message' => 'You have already vouched for this listing.'
+            ], 409);
+        }
+
+        // Save vouch
+        ListingVouch::create([
+            'user_id' => $userId,
+            'listing_id' => $listingId
+        ]);
+
+        // Count updated vouches
+        $vouchCount = ListingVouch::where('listing_id', $listingId)->count();
+
+        return response()->json([
+            'status' => true,
+            'message' => 'Vouch recorded successfully.',
+            'listing_id' => $listingId,
+            'total_vouches' => $vouchCount
+        ]);
     }
 }

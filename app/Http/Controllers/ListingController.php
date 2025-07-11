@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\ListingModel;
+use App\Models\ListingVouch;
 use Illuminate\Http\Request;
 use App\Models\ListingCharge;
 use App\Http\Resources\UserResource;
@@ -63,38 +64,38 @@ class ListingController extends Controller
 
 
 
-   public function myExpiredListings()
-{
-    $expiredListings = $this->listingService->myExpiredListings();
+    public function myExpiredListings()
+    {
+        $expiredListings = $this->listingService->myExpiredListings();
 
-    return response()->json([
-        'status' => 'true',
-        'listings' => $expiredListings
-    ]);
-}
-
-
-public function relist(Request $request)
-{
-    $request->validate([
-        'listing_id' => 'required|exists:listings,id',
-    ]);
-
-    $result =  $this->listingService->relist($request->listing_id, auth()->id());
-
-    if (!$result['status']) {
         return response()->json([
-            'status' => false,
-            'message' => $result['message']
-        ], 404);
+            'status' => 'true',
+            'listings' => $expiredListings
+        ]);
     }
 
-    return response()->json([
-        'status' => true,
-        'message' => $result['message'],
-        'listing' => $result['listing']
-    ]);
-}
+
+    public function relist(Request $request)
+    {
+        $request->validate([
+            'listing_id' => 'required|exists:listings,id',
+        ]);
+
+        $result =  $this->listingService->relist($request->listing_id, auth()->id());
+
+        if (!$result['status']) {
+            return response()->json([
+                'status' => false,
+                'message' => $result['message']
+            ], 404);
+        }
+
+        return response()->json([
+            'status' => true,
+            'message' => $result['message'],
+            'listing' => $result['listing']
+        ]);
+    }
 
 
     public function getListingDetail($id)
@@ -263,4 +264,25 @@ public function relist(Request $request)
             'listing' => $listing
         ]);
     }
+
+
+    // vouch
+
+   public function vouch(Request $request)
+{
+    try {
+        $request->validate([
+            'listing_id' => 'required|exists:listings,id',
+        ]);
+
+        return $this->listingService->vouch($request);
+    } catch (\Exception $e) {
+        return response()->json([
+            'status' => false,
+            'message' => 'Something went wrong.',
+            'error' => $e->getMessage()
+        ], 500);
+    }
+}
+
 }

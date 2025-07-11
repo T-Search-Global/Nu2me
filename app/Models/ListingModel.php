@@ -25,7 +25,7 @@ class ListingModel extends Model
         'dimensions',
         'sold',
     ];
-    protected $appends = ['is_expire'];
+    protected $appends = ['is_expire','vouch_count'];
 
     protected $hidden = [
         'created_at',
@@ -67,5 +67,11 @@ class ListingModel extends Model
         } else {
             return 0;
         }
+    }
+
+
+    public function getVouchCountAttribute()
+    {
+        return $this->hasMany(ListingVouch::class, 'listing_id')->count();
     }
 }
